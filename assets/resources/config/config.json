@@ -1,0 +1,6 @@
+{
+    "debug": true, 
+    "login_mode": 0, 
+    "server_http_address": "http://192.168.1.101:3001", 
+    "public_http_address": "http://192.168.1.104"
+}

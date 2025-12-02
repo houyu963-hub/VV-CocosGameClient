@@ -1,0 +1,97 @@
+
+pengganghu.png
+size: 1003,261
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+gang
+  rotate: false
+  xy: 402, 2
+  size: 128, 118
+  orig: 128, 118
+  offset: 0, 0
+  index: -1
+gang2
+  rotate: false
+  xy: 532, 13
+  size: 128, 118
+  orig: 128, 118
+  offset: 0, 0
+  index: -1
+glow1
+  rotate: false
+  xy: 2, 3
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+hu
+  rotate: false
+  xy: 893, 133
+  size: 108, 126
+  orig: 108, 126
+  offset: 0, 0
+  index: -1
+hu3
+  rotate: false
+  xy: 662, 13
+  size: 128, 118
+  orig: 128, 118
+  offset: 0, 0
+  index: -1
+lizi1
+  rotate: false
+  xy: 922, 80
+  size: 41, 51
+  orig: 41, 51
+  offset: 0, 0
+  index: -1
+lizi2
+  rotate: false
+  xy: 922, 44
+  size: 36, 34
+  orig: 36, 34
+  offset: 0, 0
+  index: -1
+lizi3
+  rotate: false
+  xy: 965, 100
+  size: 33, 31
+  orig: 33, 31
+  offset: 0, 0
+  index: -1
+peng
+  rotate: false
+  xy: 260, 2
+  size: 140, 118
+  orig: 140, 118
+  offset: 0, 0
+  index: -1
+peng2
+  rotate: false
+  xy: 792, 13
+  size: 128, 118
+  orig: 128, 118
+  offset: 0, 0
+  index: -1
+renshu
+  rotate: false
+  xy: 260, 122
+  size: 251, 137
+  orig: 251, 137
+  offset: 0, 0
+  index: -1
+zimo
+  rotate: false
+  xy: 513, 133
+  size: 188, 126
+  orig: 188, 126
+  offset: 0, 0
+  index: -1
+zimo2
+  rotate: false
+  xy: 703, 133
+  size: 188, 126
+  orig: 188, 126
+  offset: 0, 0
+  index: -1

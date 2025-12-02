@@ -1,0 +1,76 @@
+
+huanpai.png
+size: 330,515
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+dain2
+  rotate: false
+  xy: 2, 2
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+dain3
+  rotate: false
+  xy: 2, 2
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+dian1
+  rotate: false
+  xy: 2, 2
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+di
+  rotate: true
+  xy: 2, 54
+  size: 459, 172
+  orig: 459, 172
+  offset: 0, 0
+  index: -1
+duijia
+  rotate: true
+  xy: 294, 84
+  size: 214, 34
+  orig: 214, 34
+  offset: 0, 0
+  index: -1
+huanpaizhong
+  rotate: false
+  xy: 176, 463
+  size: 151, 50
+  orig: 151, 50
+  offset: 0, 0
+  index: -1
+nishizhen
+  rotate: false
+  xy: 2, 18
+  size: 250, 34
+  orig: 250, 34
+  offset: 0, 0
+  index: -1
+shangjiantou
+  rotate: false
+  xy: 176, 82
+  size: 80, 216
+  orig: 80, 216
+  offset: 0, 0
+  index: -1
+shunjiantou1
+  rotate: false
+  xy: 176, 300
+  size: 145, 161
+  orig: 145, 161
+  offset: 0, 0
+  index: -1
+shunshizhen
+  rotate: true
+  xy: 258, 48
+  size: 250, 34
+  orig: 250, 34
+  offset: 0, 0
+  index: -1

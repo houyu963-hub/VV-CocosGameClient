@@ -1,0 +1,48 @@
+
+paijujieshu.png
+size: 1974,253
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bg
+  rotate: false
+  xy: 2, 17
+  size: 909, 234
+  orig: 909, 234
+  offset: 0, 0
+  index: -1
+liu
+  rotate: true
+  xy: 1839, 2
+  size: 249, 133
+  orig: 249, 133
+  offset: 0, 0
+  index: -1
+lj_bian
+  rotate: false
+  xy: 913, 213
+  size: 924, 38
+  orig: 924, 38
+  offset: 0, 0
+  index: -1
+pai
+  rotate: false
+  xy: 913, 27
+  size: 441, 144
+  orig: 441, 144
+  offset: 0, 0
+  index: -1
+pai2
+  rotate: false
+  xy: 1356, 27
+  size: 441, 144
+  orig: 441, 144
+  offset: 0, 0
+  index: -1
+shang_bian
+  rotate: false
+  xy: 913, 173
+  size: 909, 38
+  orig: 909, 38
+  offset: 0, 0
+  index: -1

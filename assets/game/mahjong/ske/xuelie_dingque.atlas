@@ -1,0 +1,41 @@
+
+xuelie_dingque.png
+size: 772,163
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tiao
+  rotate: false
+  xy: 2, 2
+  size: 158, 159
+  orig: 158, 159
+  offset: 0, 0
+  index: -1
+tiao_g2
+  rotate: false
+  xy: 482, 15
+  size: 143, 146
+  orig: 143, 146
+  offset: 0, 0
+  index: -1
+tiao_g3
+  rotate: false
+  xy: 627, 15
+  size: 143, 146
+  orig: 143, 146
+  offset: 0, 0
+  index: -1
+tong
+  rotate: false
+  xy: 162, 2
+  size: 158, 159
+  orig: 158, 159
+  offset: 0, 0
+  index: -1
+wan
+  rotate: false
+  xy: 322, 2
+  size: 158, 159
+  orig: 158, 159
+  offset: 0, 0
+  index: -1

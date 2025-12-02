@@ -1,0 +1,41 @@
+
+cuopai_jia.png
+size: 185,311
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+mj
+  rotate: false
+  xy: 95, 79
+  size: 84, 114
+  orig: 84, 114
+  offset: 0, 0
+  index: -1
+mj2
+  rotate: false
+  xy: 95, 2
+  size: 88, 75
+  orig: 88, 75
+  offset: 0, 0
+  index: -1
+pai
+  rotate: false
+  xy: 95, 195
+  size: 88, 114
+  orig: 88, 114
+  offset: 0, 0
+  index: -1
+pai2
+  rotate: false
+  xy: 2, 179
+  size: 91, 130
+  orig: 91, 130
+  offset: 0, 0
+  index: -1
+pai3
+  rotate: false
+  xy: 2, 47
+  size: 91, 130
+  orig: 91, 130
+  offset: 0, 0
+  index: -1

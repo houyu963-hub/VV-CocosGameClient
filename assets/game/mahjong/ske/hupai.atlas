@@ -1,0 +1,104 @@
+
+hupai.png
+size: 1528,334
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+lizi1
+  rotate: false
+  xy: 1424, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+shandian_0
+  rotate: false
+  xy: 518, 132
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+shandian_1
+  rotate: false
+  xy: 720, 132
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+shandian_2
+  rotate: false
+  xy: 922, 132
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+shandian_3
+  rotate: false
+  xy: 1124, 132
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+tx1
+  rotate: true
+  xy: 518, 2
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+tx2
+  rotate: false
+  xy: 2, 76
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+tx3
+  rotate: false
+  xy: 260, 76
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+tx4
+  rotate: false
+  xy: 1034, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+tx5
+  rotate: true
+  xy: 776, 2
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+tx6
+  rotate: false
+  xy: 1326, 132
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+tx7
+  rotate: false
+  xy: 1164, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+xian1
+  rotate: false
+  xy: 2, 64
+  size: 200, 10
+  orig: 200, 10
+  offset: 0, 0
+  index: -1
+yan1
+  rotate: false
+  xy: 1294, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

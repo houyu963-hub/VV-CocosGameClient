@@ -1,0 +1,63 @@
+{
+"skeleton": {
+	"hash": "zZFgx8b9szCGDLvIuU/8pDzd8ds",
+	"spine": "3.8.75",
+	"x": -49,
+	"y": -51,
+	"width": 98,
+	"height": 102,
+	"images": "./img/",
+	"audio": ""
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "骨骼", "parent": "root" },
+	{ "name": "骨骼2", "parent": "root" }
+],
+"slots": [
+	{ "name": "1", "bone": "骨骼2" },
+	{ "name": "图层 2", "bone": "骨骼", "attachment": "图层 2" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"图层 2": {
+				"图层 2": { "width": 98, "height": 102 }
+			},
+			"1": {
+				"1": { "width": 48, "height": 49 }
+			}
+		}
+	}
+],
+"animations": {
+	"loading": {
+		"slots": {
+			"1": {
+				"attachment": [
+					{ "name": "1" }
+				]
+			}
+		},
+		"bones": {
+			"骨骼2": {
+				"rotate": [
+					{},
+					{ "time": 1, "angle": 180 },
+					{ "time": 2 }
+				]
+			},
+			"骨骼": {
+				"rotate": [
+					{},
+					{ "time": 0.5, "angle": 180 },
+					{ "time": 1 },
+					{ "time": 1.5, "angle": 180 },
+					{ "time": 2 }
+				]
+			}
+		}
+	}
+}
+}

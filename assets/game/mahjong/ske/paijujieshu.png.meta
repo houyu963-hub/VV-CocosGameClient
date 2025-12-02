@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.26",
+  "importer": "image",
+  "imported": true,
+  "uuid": "d30659e7-6846-4b8b-9afe-26d1a4ac1b06",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "paijujieshu": {
+      "ver": "1.0.4",
+      "uuid": "3c9659d5-615d-40a7-b146-fa8d74f8bc4b",
+      "rawTextureUuid": "d30659e7-6846-4b8b-9afe-26d1a4ac1b06",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 1,
+      "offsetY": 0,
+      "trimX": 4,
+      "trimY": 2,
+      "width": 1968,
+      "height": 249,
+      "rawWidth": 1974,
+      "rawHeight": 253,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "d30659e7-6846-4b8b-9afe-26d1a4ac1b06@6c48a",
+      "displayName": "paijujieshu",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "d30659e7-6846-4b8b-9afe-26d1a4ac1b06",
+        "visible": false
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "hasAlpha": true,
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "redirect": "d30659e7-6846-4b8b-9afe-26d1a4ac1b06@6c48a"
+  }
+}

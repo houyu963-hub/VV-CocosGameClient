@@ -1,0 +1,20 @@
+
+feizhuang.png
+size: 292,150
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+tiao_g2
+  rotate: false
+  xy: 147, 2
+  size: 143, 146
+  orig: 143, 146
+  offset: 0, 0
+  index: -1
+tiao_g3
+  rotate: false
+  xy: 2, 2
+  size: 143, 146
+  orig: 143, 146
+  offset: 0, 0
+  index: -1

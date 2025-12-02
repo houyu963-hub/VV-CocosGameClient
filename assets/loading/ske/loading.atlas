@@ -1,0 +1,20 @@
+
+loading.png
+size: 152,101
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1
+  rotate: false
+  xy: 103, 50
+  size: 47, 49
+  orig: 48, 49
+  offset: 1, 0
+  index: -1
+图层 2
+  rotate: true
+  xy: 2, 2
+  size: 97, 99
+  orig: 98, 102
+  offset: 0, 3
+  index: -1

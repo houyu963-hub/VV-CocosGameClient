@@ -1,0 +1,67 @@
+{
+  "__version__": "1.3.7",
+  "splash-setting": {
+    "logo": {
+      "type": "custom",
+      "image": "project://settings/icon_taishunmajiang.png"
+    },
+    "background": {
+      "image": "project://settings/20250919-112530.png",
+      "type": "custom"
+    },
+    "displayRatio": 1,
+    "totalTime": 1500
+  },
+  "bundleConfig": {
+    "custom": {
+      "default": {
+        "displayName": "i18n:builder.asset_bundle.defaultConfig",
+        "configs": {
+          "native": {
+            "preferredOptions": {
+              "isRemote": false,
+              "compressionType": "merge_dep"
+            }
+          },
+          "web": {
+            "preferredOptions": {
+              "isRemote": false,
+              "compressionType": "merge_dep"
+            },
+            "fallbackOptions": {
+              "compressionType": "merge_dep"
+            }
+          },
+          "miniGame": {
+            "fallbackOptions": {
+              "isRemote": true,
+              "compressionType": "merge_dep"
+            },
+            "configMode": "fallback",
+            "overwriteSettings": {
+              "wechatgame": {
+                "compressionType": "merge_dep",
+                "isRemote": true
+              },
+              "alipay-mini-game": {
+                "isRemote": true
+              },
+              "bytedance-mini-game": {
+                "isRemote": true
+              },
+              "fb-instant-games": {
+                "isRemote": true
+              },
+              "huawei-quick-game": {
+                "isRemote": true
+              },
+              "oppo-mini-game": {
+                "isRemote": true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

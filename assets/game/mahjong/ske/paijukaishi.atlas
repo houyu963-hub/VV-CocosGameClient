@@ -1,0 +1,90 @@
+
+paijukaishi.png
+size: 1842,983
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+g_1
+  rotate: false
+  xy: 2, 2
+  size: 293, 6
+  orig: 293, 6
+  offset: 0, 0
+  index: -1
+g_3
+  rotate: false
+  xy: 1368, 519
+  size: 472, 462
+  orig: 472, 462
+  offset: 0, 0
+  index: -1
+g_4
+  rotate: true
+  xy: 616, 205
+  size: 776, 750
+  orig: 776, 750
+  offset: 0, 0
+  index: -1
+g_5
+  rotate: false
+  xy: 1368, 261
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+g_6
+  rotate: false
+  xy: 297, 4
+  size: 68, 4
+  orig: 68, 4
+  offset: 0, 0
+  index: -1
+g_kaishi
+  rotate: false
+  xy: 367, 2
+  size: 249, 135
+  orig: 249, 135
+  offset: 0, 0
+  index: -1
+g_paiju
+  rotate: false
+  xy: 883, 68
+  size: 249, 135
+  orig: 249, 135
+  offset: 0, 0
+  index: -1
+kaishi
+  rotate: false
+  xy: 1134, 68
+  size: 249, 135
+  orig: 249, 135
+  offset: 0, 0
+  index: -1
+kaishidi
+  rotate: true
+  xy: 2, 10
+  size: 971, 297
+  orig: 971, 297
+  offset: 0, 0
+  index: -1
+lizi_001
+  rotate: false
+  xy: 301, 73
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+paiju
+  rotate: false
+  xy: 618, 53
+  size: 263, 150
+  orig: 263, 150
+  offset: 0, 0
+  index: -1
+paijudi
+  rotate: true
+  xy: 301, 139
+  size: 842, 313
+  orig: 842, 313
+  offset: 0, 0
+  index: -1

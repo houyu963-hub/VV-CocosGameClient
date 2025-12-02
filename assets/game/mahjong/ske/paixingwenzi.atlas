@@ -1,0 +1,111 @@
+
+paixingwenzi.png
+size: 1461,576
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+zi_chadajiao
+  rotate: false
+  xy: 1134, 5
+  size: 325, 140
+  orig: 325, 140
+  offset: 0, 0
+  index: -1
+zi_chahuazhu
+  rotate: true
+  xy: 1302, 249
+  size: 325, 139
+  orig: 325, 139
+  offset: 0, 0
+  index: -1
+zi_gangshanghua
+  rotate: false
+  xy: 2, 437
+  size: 440, 137
+  orig: 440, 137
+  offset: 0, 0
+  index: -1
+zi_gangshanghua_0
+  rotate: false
+  xy: 2, 287
+  size: 427, 148
+  orig: 427, 148
+  offset: 0, 0
+  index: -1
+zi_gangshangpao
+  rotate: false
+  xy: 2, 15
+  size: 334, 120
+  orig: 334, 120
+  offset: 0, 0
+  index: -1
+zi_gangshangpao_0
+  rotate: false
+  xy: 2, 137
+  size: 427, 148
+  orig: 427, 148
+  offset: 0, 0
+  index: -1
+zi_haidilao
+  rotate: false
+  xy: 804, 6
+  size: 328, 139
+  orig: 328, 139
+  offset: 0, 0
+  index: -1
+zi_haidilao_0
+  rotate: false
+  xy: 444, 426
+  size: 427, 148
+  orig: 427, 148
+  offset: 0, 0
+  index: -1
+zi_hujiaozhuanyi
+  rotate: false
+  xy: 431, 139
+  size: 371, 135
+  orig: 371, 135
+  offset: 0, 0
+  index: -1
+zi_hujiaozhuanyi_0
+  rotate: false
+  xy: 431, 2
+  size: 371, 135
+  orig: 371, 135
+  offset: 0, 0
+  index: -1
+zi_qiangganghu
+  rotate: false
+  xy: 804, 147
+  size: 347, 127
+  orig: 347, 127
+  offset: 0, 0
+  index: -1
+zi_qiangganghu_0
+  rotate: false
+  xy: 873, 426
+  size: 427, 148
+  orig: 427, 148
+  offset: 0, 0
+  index: -1
+zi_tuishui
+  rotate: false
+  xy: 1153, 160
+  size: 173, 87
+  orig: 173, 87
+  offset: 0, 0
+  index: -1
+zi_yipaoduox
+  rotate: false
+  xy: 431, 276
+  size: 427, 148
+  orig: 427, 148
+  offset: 0, 0
+  index: -1
+zi_yipaoduox_0
+  rotate: false
+  xy: 860, 276
+  size: 427, 148
+  orig: 427, 148
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,70 @@
+{
+  "ver": "1.0.26",
+  "importer": "image",
+  "imported": true,
+  "uuid": "a17be31f-49d8-41b4-bd23-d24d66e7bd03",
+  "files": [
+    ".json",
+    ".png"
+  ],
+  "subMetas": {
+    "paixingwenzi": {
+      "ver": "1.0.4",
+      "uuid": "f1da6509-a51f-4452-9bc6-10d489cfbb3a",
+      "rawTextureUuid": "a17be31f-49d8-41b4-bd23-d24d66e7bd03",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 2,
+      "trimY": 2,
+      "width": 1457,
+      "height": 572,
+      "rawWidth": 1461,
+      "rawHeight": 576,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {},
+      "importer": "*",
+      "imported": false,
+      "files": [],
+      "userData": {},
+      "displayName": "",
+      "id": "",
+      "name": ""
+    },
+    "6c48a": {
+      "importer": "texture",
+      "uuid": "a17be31f-49d8-41b4-bd23-d24d66e7bd03@6c48a",
+      "displayName": "paixingwenzi",
+      "id": "6c48a",
+      "name": "texture",
+      "userData": {
+        "wrapModeS": "repeat",
+        "wrapModeT": "repeat",
+        "minfilter": "linear",
+        "magfilter": "linear",
+        "mipfilter": "none",
+        "anisotropy": 0,
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "a17be31f-49d8-41b4-bd23-d24d66e7bd03",
+        "visible": false
+      },
+      "ver": "1.0.22",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "hasAlpha": true,
+    "type": "texture",
+    "fixAlphaTransparencyArtifacts": true,
+    "redirect": "a17be31f-49d8-41b4-bd23-d24d66e7bd03@6c48a"
+  }
+}

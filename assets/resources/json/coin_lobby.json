@@ -1,0 +1,38 @@
+{
+  "1": {
+    "ID": 1,
+    "RoomType": 1,
+    "Min": 1000,
+    "Max": 2000,
+    "Desc": "再玩3局可获得一张奖券",
+    "BaseScore": 300,
+    "BaseScoreDesc": "<color=#a0d5c3>底分：</color><color=#fff6b9>{0}金币</color>"
+  },
+  "2": {
+    "ID": 2,
+    "RoomType": 2,
+    "Min": 2000,
+    "Max": 4000,
+    "Desc": "再玩3局可获得一张奖券",
+    "BaseScore": 300,
+    "BaseScoreDesc": "<color=#b9d2e5>底分：</color><color=#fff6b9>{0}金币</color>"
+  },
+  "3": {
+    "ID": 3,
+    "RoomType": 3,
+    "Min": 3000,
+    "Max": 6000,
+    "Desc": "再玩3局可获得一张奖券",
+    "BaseScore": 300,
+    "BaseScoreDesc": "<color=#c8b3e1>底分：</color><color=#fff6b9>{0}金币</color>"
+  },
+  "4": {
+    "ID": 4,
+    "RoomType": 4,
+    "Min": 4000,
+    "Max": 8000,
+    "Desc": "再玩3局可获得一张奖券",
+    "BaseScore": 300,
+    "BaseScoreDesc": "<color=#e9b8b8>底分：</color><color=#fff6b9>{0}金币</color>"
+  }
+}
