@@ -1,5 +1,3 @@
-import { Client } from 'db://assets/hall/script/Client';
-import { SettingProperty } from 'db://assets/hall/script/Define';
 import { Bundle_name } from '../../../frame/config/Config';
 import vv from '../../../frame/Core';
 
@@ -18,7 +16,7 @@ export default class MahjongSound {
     public static playEffect(audioName: string, loop: boolean = false, checkPlaying: boolean = true, sex: number = -1): void {
         let path = this._path;
         if (sex >= 0) {
-            let Ltype = Client.instance.Setting.getSettingPropertyByName(SettingProperty.Language);
+            let Ltype = '0';
             path += `${Ltype === '0' ? 'sichuan/' : 'putong/'}${sex === 0 ? 'man/' : 'woman/'}`;
         }
         vv.audio.playEffect(path + audioName, Bundle_name.Common, checkPlaying, loop);

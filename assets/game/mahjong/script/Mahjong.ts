@@ -7,7 +7,6 @@ import Timer from "db://assets/frame/component/Timer";
 import { Config } from "db://assets/frame/config/Config";
 import { PopupName } from "db://assets/frame/ui/PopupConfig";
 import SceneNavigator from "db://assets/frame/ui/SceneNavigator";
-import { Client } from "db://assets/hall/script/Client";
 import { Battle, Enum, Match } from "db://assets/resources/pbjs";
 import vv from "../../../frame/Core";
 import MahjongModel from "./MahjongModel";
@@ -35,7 +34,6 @@ export default class Mahjong extends GameClient {
 
     protected onLoad(): void {
         super.onLoad();
-        Client.instance.init();
         MahjongSound.playMusic(); // 播放背景音乐
 
         this._model = MahjongModel.instance; // 数据模型
@@ -415,16 +413,7 @@ export default class Mahjong extends GameClient {
                     openPopup(PopupName.RoomMain);
                     break;
                 case vv.pb.Enum.RoomType.ROOM_TYPE_GUILD: // 亲友圈房间
-                    Client.instance.Guild.reqGetGuildList().then((res) => {
-                        let index = res.findIndex(v => v.GuildID === guildID);
-                        if (index !== -1) {
-                            openPopup(PopupName.GuildMain, guildID);
-                        } else {
-                            callback?.();
-                        }
-                    }).catch((err: Error) => {
-                        vv.utils.showToast(err.message);
-                    })
+
                     break;
                 default:
                     break;

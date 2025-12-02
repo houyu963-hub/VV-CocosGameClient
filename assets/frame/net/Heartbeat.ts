@@ -7,7 +7,7 @@ import vv from "../Core";
  */
 export default class Heartbeat {
 	// 计时器
-	private _timer: NodeJS.Timeout;
+	private _timer: number;
 	// 是否在请求中
 	private _isRequesting: boolean = false;
 	// 心跳失败回调

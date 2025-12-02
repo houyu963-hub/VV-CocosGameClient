@@ -15,7 +15,7 @@ export class Socket {
 	// scocket 状态
 	public get state(): WebSocketState { return this._ws.readyState; }
 	// 超时时间
-	private _timeoutId: NodeJS.Timeout;
+	private _timeoutId: number;
 	// 成功失败回调
 	private _handlerConnect: {
 		succ: () => void,

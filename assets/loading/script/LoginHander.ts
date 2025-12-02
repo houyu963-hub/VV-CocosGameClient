@@ -9,7 +9,7 @@ import { AuthRequest, AuthResponse } from "./AuthClientWithSignature";
 
 export default class LoginHander {
 
-    private loginIds: NodeJS.Timeout[] = [];
+    private loginIds: number[] = [];
     private login_platform: number = 0
     private last_login_platform: number = -1
     public static readonly KeyLastLoginPlatform = "KeyLastLoginPlatform"

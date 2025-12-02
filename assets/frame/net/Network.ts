@@ -33,7 +33,7 @@ export default class Network {
     // 请求暂存队列
     private _pendingRequests: IRequestData[] = [];
     // 超时检测计时器id
-    private _timer: NodeJS.Timeout = null;
+    private _timer: number = null;
     // 服务器地址
     private _server_address: string = null;
 

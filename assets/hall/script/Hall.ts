@@ -1,3 +1,9 @@
+import { _decorator } from "cc";
+import { Bundle_name, Scene_name } from "../../frame/config/Config";
+import vv from "../../frame/Core";
+import { SceneBase } from "../../frame/ui/SceneBase";
+import SceneNavigator from "../../frame/ui/SceneNavigator";
+
 const { ccclass } = _decorator;
 @ccclass
 export default class Hall extends SceneBase {
