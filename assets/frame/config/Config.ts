@@ -46,9 +46,11 @@ export enum Scene_name {
  * 自定义bd名称
  */
 export enum Bundle_name {
-    Resources = 'resources',
-    Loading = 'loading',
-    Common = 'common',
-    Hall = 'hall',
-    Mahjong = 'mahjong',
+    // Internal = 'internal',   // 引擎自带 internal包。包含引擎模块内置的一些默认资源
+    Resources = 'resources',    // 引擎自带 resources 包。 加载优先级8
+    // Main = 'main',           // 引擎自带（主包）包含框架代码、启动场景。 加载优先级7
+    Loading = 'loading',        // 自定义 loading 包, 主要处理热更逻辑、资源加载。 加载优先级6
+    Common = 'common',          // 自定义 common 包, 包含公共资源。 加载优先级5
+    Hall = 'hall',              // 自定义 hall 包, 包含大厅相关资源。 加载优先级4
+    Mahjong = 'mahjong',        // 自定义 mahjong 包, 包含麻将游戏相关资源。 加载优先级1
 }
