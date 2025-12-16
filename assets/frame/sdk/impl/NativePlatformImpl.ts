@@ -41,7 +41,7 @@ export class NativePlatformImpl implements IPlatformApi {
     networkAvailable?(): Promise<PlatformResponse<{ available: boolean; }>> {
         return this.callNativeMethod('networkAvailable', null);
     }
-    netCheck?(): Promise<PlatformResponse<{ state: 'DO_WIFI' | 'DO_3G' | 'NO_CONNECTION'; }>> {
+    netCheck?(): Promise<PlatformResponse<{ state: 'DO_WIFI' | 'DO_MOBILE' | 'NO_CONNECTION'; }>> {
         return this.callNativeMethod('netCheck', null);
     }
     sendMessage(messageInfo: MessageInfo): Promise<PlatformResponse<{ message: MessageInfo; }>> {
@@ -58,6 +58,9 @@ export class NativePlatformImpl implements IPlatformApi {
     }
     getPackageName(): Promise<PlatformResponse<{ packageName: string; }>> {
         return this.callNativeMethod('getPackageName', null);
+    }
+    networkChangeReceiver(): Promise<PlatformResponse<{ state: 'DO_WIFI' | 'DO_MOBILE' | 'NO_CONNECTION'; }>> {
+        return this.callNativeMethod('onNetworkStateChange', null);
     }
 
     // 调用原生方法的通用函数

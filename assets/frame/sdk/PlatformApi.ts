@@ -8,12 +8,13 @@ export interface IPlatformApi {
     closeSplash(): void;                                                                                    // 关闭启动屏 (原生平台可能需要)
     copyStr(str: string): Promise<PlatformResponse<{ content: string }>>;                                   // 复制文本
     networkAvailable?(): Promise<PlatformResponse<{ available: boolean }>>;                                 // 检测网络可用
-    netCheck?(): Promise<PlatformResponse<{ state: 'DO_WIFI' | 'DO_3G' | 'NO_CONNECTION' }>>;               // 检测网络可用类型
+    netCheck?(): Promise<PlatformResponse<{ state: 'DO_WIFI' | 'DO_MOBILE' | 'NO_CONNECTION' }>>;           // 检测网络可用类型
     sendMessage?(messageInfo: MessageInfo): Promise<PlatformResponse<{ message: MessageInfo }>>;            // 调用系统短信
     setOrientation?(orientationInfo: Orientation): Promise<PlatformResponse<{ orientation: Orientation }>>; // 设置屏幕方向
     vibrator?(): void;                                                                                      // 震动
     getDeviceId?(): Promise<PlatformResponse<{ androidId: string }>>;                                       // 获取设备ID
     getPackageName?(): Promise<PlatformResponse<{ packageName: string }>>;                                  // 获取应用包名
+    networkChangeReceiver?(): Promise<PlatformResponse<{ state: 'DO_WIFI' | 'DO_MOBILE' | 'NO_CONNECTION' }>>;// 监听网络状态
 }
 
 // 平台能力枚举 (可按需扩展)
