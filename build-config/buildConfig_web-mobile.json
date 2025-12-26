@@ -1,0 +1,74 @@
+{
+  "name": "vvgame",
+  "server": "",
+  "platform": "web-mobile",
+  "buildPath": "project://build",
+  "debug": false,
+  "md5Cache": true,
+  "skipCompressTexture": true,
+  "sourceMaps": false,
+  "polyfills": {
+    "asyncFunctions": true
+  },
+  "experimentalEraseModules": false,
+  "startSceneAssetBundle": false,
+  "bundleConfigs": [],
+  "useBuiltinServer": false,
+  "mainBundleIsRemote": false,
+  "mainBundleCompressionType": "merge_dep",
+  "useSplashScreen": false,
+  "bundleCommonChunk": false,
+  "packAutoAtlas": true,
+  "startScene": "55babe11-342c-4dc6-8b7a-36cb427f49ed",
+  "outputName": "web-mobile",
+  "taskName": "web-mobile",
+  "scenes": [
+    {
+      "url": "db://assets/hall/Hall.scene",
+      "uuid": "7cebf329-1e6e-4b70-912d-5a1e1aecf207",
+      "bundle": "db://assets/hall"
+    },
+    {
+      "url": "db://assets/loading/Loading.scene",
+      "uuid": "2305bca8-5405-4002-adf7-8e78dc4daa39",
+      "bundle": "db://assets/loading"
+    },
+    {
+      "url": "db://assets/loading/Login.scene",
+      "uuid": "71635a32-2f84-4fa4-83a9-36f61850c896",
+      "bundle": "db://assets/loading"
+    },
+    {
+      "url": "db://assets/start/Start.scene",
+      "uuid": "55babe11-342c-4dc6-8b7a-36cb427f49ed"
+    },
+    {
+      "url": "db://assets/game/mahjong/Mahjong.scene",
+      "uuid": "455eb988-eff3-42c3-8968-bd57352ffe87",
+      "bundle": "db://assets/game/mahjong"
+    }
+  ],
+  "packages": {
+    "web-mobile": {
+      "orientation": "auto",
+      "embedWebDebugger": false,
+      "cullEngineAsmJsModule": false,
+      "__version__": "1.0.1"
+    },
+    "engine": {
+      "cleanupImageCache": "inheritProjectSetting",
+      "__version__": "1.0.7"
+    },
+    "adsense-h5g-plugin": {
+      "enableAdsense": false,
+      "enableTestAd": false,
+      "__version__": "1.0.1",
+      "AFPHostPropertyCode": "ca-host-pub-5396158963872751",
+      "AFPHostDomain": "douyougame.com",
+      "otherAFPHostPropertyCode": "",
+      "otherAFPDomain": ""
+    }
+  },
+  "__version__": "1.3.7",
+  "buildMode": "normal"
+}

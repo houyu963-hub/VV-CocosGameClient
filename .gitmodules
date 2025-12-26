@@ -1,5 +1,5 @@
-[submodule "VV-CocosTools"]
-	path = VV-CocosTools
+[submodule "tools"]
+	path = tools
 	url = https://github.com/houyu963-hub/VV-CocosTools.git
 	branch = main
 [submodule "native"]
