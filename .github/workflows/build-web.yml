@@ -83,7 +83,7 @@ jobs:
 
       # 7. build
       - name: Build Web-Mobile
-        run: E:/software/Cocos/Editors/3.8.1/CocosCreator.exe --project ../../../ --build "platform=web-mobile;configPath=../../../build-config/buildConfig_web-mobile.json"
+        run: E:/software/Cocos/Editors/3.8.1/CocosCreator.exe --project ../../../ --build "platform=web-mobile;configPath=../../build-config/buildConfig_web-mobile.json"
 
       # 8. deploy
       - name: Deploy
