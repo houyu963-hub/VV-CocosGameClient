@@ -1,0 +1,94 @@
+name: Cocos Web CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - test
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deploy environment'
+        required: true
+        type: choice
+        options:
+          - test
+          - production
+      ref:
+        description: 'Branch or commit hash'
+        required: true
+        default: main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 拉代码（支持分支 / commit）
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      # 2. Node
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 3. npm cache
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+      # 4. install
+      - name: Install dependencies
+        run: npm install
+
+      # 5. 计算环境
+      - name: Resolve Environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ENV=${{ github.event.inputs.environment }}
+          elif [ "${{ github.ref }}" = "refs/heads/test" ]; then
+            ENV=test
+          else
+            ENV=production
+          fi
+          echo "ENV=$ENV" >> $GITHUB_ENV
+
+      # 6. 版本 & changelog
+      - name: Generate build info
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TIME=$(date +'%Y-%m-%d %H:%M:%S')
+          COMMIT=$(git rev-parse --short HEAD)
+          MESSAGE=$(git log -1 --pretty=%B)
+          AUTHOR=$(git log -1 --pretty=%an)
+
+          cat <<EOF > assets/build-info.json
+          {
+            "version": "$VERSION",
+            "env": "$ENV",
+            "commit": "$COMMIT",
+            "author": "$AUTHOR",
+            "message": "$MESSAGE",
+            "time": "$TIME"
+          }
+          EOF
+
+      # 7. build
+      - name: Build Web-Mobile
+        run: npx cocos build -p web-mobile
+
+      # 8. deploy
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web-mobile
+          destination_dir: ${{ env.ENV }}
