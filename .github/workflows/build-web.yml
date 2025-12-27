@@ -83,7 +83,6 @@ jobs:
 
       # 7. build
       - name: Build Web-Mobile
-          working-directory: .
           run: |
             npx cocos build \
               -p web-mobile \
