@@ -1,11 +1,13 @@
 name: Cocos Web CI/CD
 
 on:
+  # 推送 main / test 分支自动触发
   push:
     branches:
       - main
       - test
 
+  # 手动触发（支持选环境、选分支或 commit）
   workflow_dispatch:
     inputs:
       environment:
@@ -24,6 +26,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    # 全局环境变量
     env:
       CREATOR_VERSION: 3.8.1
       BUILD_PLATFORM: web-mobile
@@ -36,42 +39,41 @@ jobs:
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
 
-      # 2. Node
+      # 2. Node 环境（Creator 3.8.x 推荐 Node 16）
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 16
 
-      # 3. npm cache
+      # 3. npm 缓存（加快依赖安装）
       - name: Cache npm
         uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
-    
+
       # 4. 缓存 Cocos Creator 编辑器
       - name: Cache Cocos Creator
-      id: cache-creator
-      uses: actions/cache@v4
-      with:
-        path: ~/cocos
-        key: cocos-creator-${{ env.CREATOR_VERSION }}
+        id: cache-creator
+        uses: actions/cache@v4
+        with:
+          path: ~/cocos
+          key: cocos-creator-${{ env.CREATOR_VERSION }}
 
-      # 5. 下载并解压 Creator（只在没缓存时）
+      # 5. 下载并解压 Creator（仅在缓存未命中时执行）
       - name: Download Cocos Creator
-          if: steps.cache-creator.outputs.cache-hit != 'true'
-          run: |
-            mkdir -p ~/cocos
-            wget -q https://download.cocos.com/CocosCreator/v${CREATOR_VERSION}/CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip
-            unzip -q CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip -d ~/cocos
+        if: steps.cache-creator.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/cocos
+          wget -q https://download.cocos.com/CocosCreator/v${CREATOR_VERSION}/CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip
+          unzip -q CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip -d ~/cocos
 
-       # 6. install
-       - name: Install dependencies
-          run: npm install
+      # 6. 安装 npm 依赖（工具脚本、构建辅助）
+      - name: Install dependencies
+        run: npm install
 
-      # 7. 计算环境
+      # 7. 计算当前发布环境（test / production）
       - name: Resolve Environment
-        id: env
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             ENV=${{ github.event.inputs.environment }}
@@ -82,10 +84,10 @@ jobs:
           fi
           echo "ENV=$ENV" >> $GITHUB_ENV
 
-      # 8. 版本 & changelog
+      # 8. 生成版本信息 & changelog（写入游戏资源）
       - name: Generate build info
         run: |
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=$(git describe --tags --always)
           TIME=$(date +'%Y-%m-%d %H:%M:%S')
           COMMIT=$(git rev-parse --short HEAD)
           MESSAGE=$(git log -1 --pretty=%B)
@@ -101,17 +103,18 @@ jobs:
             "time": "$TIME"
           }
           EOF
-      # 9. 构建 Web-Mobile（核心）
+
+      # 9. 构建 Web-Mobile（核心步骤，使用 Creator Editor CLI）
       - name: Build Web-Mobile
         run: |
           ~/cocos/CocosCreator/Creator/${CREATOR_VERSION}/CocosCreator \
             --project $(pwd) \
             --build "platform=${BUILD_PLATFORM};configPath=build-config/buildConfig_web-mobile.json;mode=release"
 
-      # 10. deploy
+      # 10. 发布到 GitHub Pages（按环境目录区分）
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web-mobile
+          publish_dir: ${{ env.BUILD_PATH }}
           destination_dir: ${{ env.ENV }}
