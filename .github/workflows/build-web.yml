@@ -83,7 +83,10 @@ jobs:
 
       # 7. build
       - name: Build Web-Mobile
-        run: E:/software/Cocos/Editors/3.8.1/CocosCreator.exe --project D:/project/VV-CocosGameClient --build "platform=web-mobile;configPath=D:/project/VV-CocosGameClient/build-config/buildConfig_web-mobile.json"
+        run: npx cocos build \
+          -p web-mobile \
+          --configPath ../../build-config/buildConfig_web-mobile.json \
+          --mode release
 
       # 8. deploy
       - name: Deploy
