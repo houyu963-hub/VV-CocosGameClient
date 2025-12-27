@@ -24,6 +24,11 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      CREATOR_VERSION: 3.8.1
+      BUILD_PLATFORM: web-mobile
+      BUILD_PATH: build/web-mobile
+
     steps:
       # 1. 拉代码（支持分支 / commit）
       - name: Checkout
@@ -43,12 +48,28 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+    
+      # 4. 缓存 Cocos Creator 编辑器
+      - name: Cache Cocos Creator
+      id: cache-creator
+      uses: actions/cache@v4
+      with:
+        path: ~/cocos
+        key: cocos-creator-${{ env.CREATOR_VERSION }}
 
-      # 4. install
-      - name: Install dependencies
-        run: npm install
+      # 5. 下载并解压 Creator（只在没缓存时）
+      - name: Download Cocos Creator
+          if: steps.cache-creator.outputs.cache-hit != 'true'
+          run: |
+            mkdir -p ~/cocos
+            wget -q https://download.cocos.com/CocosCreator/v${CREATOR_VERSION}/CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip
+            unzip -q CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip -d ~/cocos
 
-      # 5. 计算环境
+       # 6. install
+       - name: Install dependencies
+          run: npm install
+
+      # 7. 计算环境
       - name: Resolve Environment
         id: env
         run: |
@@ -61,7 +82,7 @@ jobs:
           fi
           echo "ENV=$ENV" >> $GITHUB_ENV
 
-      # 6. 版本 & changelog
+      # 8. 版本 & changelog
       - name: Generate build info
         run: |
           VERSION=$(node -p "require('./package.json').version")
@@ -80,16 +101,14 @@ jobs:
             "time": "$TIME"
           }
           EOF
-
-      # 7. build
+      # 9. 构建 Web-Mobile（核心）
       - name: Build Web-Mobile
         run: |
-          npx cocos build \
-            -p web-mobile \
-            --configPath build-config/buildConfig_web-mobile.json \
-            --mode release
+          ~/cocos/CocosCreator/Creator/${CREATOR_VERSION}/CocosCreator \
+            --project $(pwd) \
+            --build "platform=${BUILD_PLATFORM};configPath=build-config/buildConfig_web-mobile.json;mode=release"
 
-      # 8. deploy
+      # 10. deploy
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
