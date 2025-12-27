@@ -83,10 +83,12 @@ jobs:
 
       # 7. build
       - name: Build Web-Mobile
-        run: npx cocos build \
-          -p web-mobile \
-          --configPath ../../build-config/buildConfig_web-mobile.json \
-          --mode release
+          working-directory: .
+          run: |
+            npx cocos build \
+              -p web-mobile \
+              --configPath build-config/buildConfig_web-mobile.json \
+              --mode release
 
       # 8. deploy
       - name: Deploy
