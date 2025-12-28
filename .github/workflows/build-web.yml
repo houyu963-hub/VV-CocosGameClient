@@ -109,24 +109,24 @@ jobs:
           }
           "@ | Out-File assets/build-info.json -Encoding utf8
 
-      # 9. Web-Mobile 构建（Windows Creator CLI）
-      - name: Build Web-Mobile
-        shell: powershell
-        run: |
-          $exe = Get-ChildItem $env:CREATOR_DIR -Recurse -Filter CocosCreator.exe | Select-Object -First 1
-          if (-not $exe) {
-            Write-Error "CocosCreator.exe not found"
-            exit 1
-          }
-          Write-Host ("Using Creator: " + $exe.FullName)
-          & $exe.FullName `
-            --project "$PWD" `
-            --build "platform=$env:BUILD_PLATFORM;configPath=build-config/buildConfig_web-mobile.json;mode=release"
+      # # 9. Web-Mobile 构建（Windows Creator CLI）
+      # - name: Build Web-Mobile
+      #   shell: powershell
+      #   run: |
+      #     $exe = Get-ChildItem $env:CREATOR_DIR -Recurse -Filter CocosCreator.exe | Select-Object -First 1
+      #     if (-not $exe) {
+      #       Write-Error "CocosCreator.exe not found"
+      #       exit 1
+      #     }
+      #     Write-Host ("Using Creator: " + $exe.FullName)
+      #     & $exe.FullName `
+      #       --project "$PWD" `
+      #       --build "platform=$env:BUILD_PLATFORM;configPath=build-config/buildConfig_web-mobile.json;mode=release"
 
-      # 10. 发布到 GitHub Pages
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ env.BUILD_PATH }}
-          destination_dir: ${{ env.ENV }}
+      # # 10. 发布到 GitHub Pages
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ${{ env.BUILD_PATH }}
+      #     destination_dir: ${{ env.ENV }}
