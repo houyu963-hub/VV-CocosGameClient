@@ -52,7 +52,11 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
 
-      # 4. 缓存 Cocos Creator
+      # 4. 安装 npm 依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 5. 缓存 Cocos Creator
       - name: Cache Cocos Creator
         id: cache-creator
         uses: actions/cache@v4
@@ -60,7 +64,7 @@ jobs:
           path: ${{ env.CREATOR_DIR }}
           key: cocos-creator-${{ env.CREATOR_VERSION }}
 
-      # 5. 下载 Creator（Windows 官方包）
+      # 6. 下载 Creator（Windows 官方包）
       - name: Download Cocos Creator
         if: steps.cache-creator.outputs.cache-hit != 'true'
         shell: powershell
@@ -70,10 +74,6 @@ jobs:
           Write-Host "Downloading: $url"
           Invoke-WebRequest -Uri $url -OutFile creator.zip
           Expand-Archive creator.zip -DestinationPath $env:CREATOR_DIR
-
-      # 6. 安装 npm 依赖
-      - name: Install dependencies
-        run: npm install
 
       # 7. 计算发布环境
       - name: Resolve Environment
@@ -109,24 +109,24 @@ jobs:
           }
           "@ | Out-File assets/build-info.json -Encoding utf8
 
-      # # 9. Web-Mobile 构建（Windows Creator CLI）
-      # - name: Build Web-Mobile
-      #   shell: powershell
-      #   run: |
-      #     $exe = Get-ChildItem $env:CREATOR_DIR -Recurse -Filter CocosCreator.exe | Select-Object -First 1
-      #     if (-not $exe) {
-      #       Write-Error "CocosCreator.exe not found"
-      #       exit 1
-      #     }
-      #     Write-Host ("Using Creator: " + $exe.FullName)
-      #     & $exe.FullName `
-      #       --project "$PWD" `
-      #       --build "platform=$env:BUILD_PLATFORM;configPath=build-config/buildConfig_web-mobile.json;mode=release"
+      # 9. Web-Mobile 构建（Windows Creator CLI）
+      - name: Build Web-Mobile
+        shell: powershell
+        run: |
+          $exe = Get-ChildItem $env:CREATOR_DIR -Recurse -Filter CocosCreator.exe | Select-Object -First 1
+          if (-not $exe) {
+            Write-Error "CocosCreator.exe not found"
+            exit 1
+          }
+          Write-Host ("Using Creator: " + $exe.FullName)
+          & $exe.FullName `
+            --project "$PWD" `
+            --build "platform=$env:BUILD_PLATFORM;configPath=build-config/buildConfig_web-mobile.json;mode=release"
 
-      # # 10. 发布到 GitHub Pages
-      # - name: Deploy
-      #   uses: peaceiris/actions-gh-pages@v4
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ${{ env.BUILD_PATH }}
-      #     destination_dir: ${{ env.ENV }}
+      # 10. 发布到 GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ${{ env.BUILD_PATH }}
+          destination_dir: ${{ env.ENV }}
