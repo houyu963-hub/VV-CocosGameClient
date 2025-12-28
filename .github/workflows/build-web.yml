@@ -2,7 +2,7 @@ name: Cocos Web CI/CD
 
 permissions:
   contents: write
-  
+
 on:
   # 推送 main / test 分支自动触发
   push:
@@ -30,10 +30,8 @@ jobs:
     runs-on: windows-latest
 
     env:
-      CREATOR_VERSION: 3.8.1
       BUILD_PLATFORM: web-mobile
       BUILD_PATH: build/web-mobile/web-mobile
-      CREATOR_DIR: C:\cocos
 
     steps:
       # 1. 拉代码
@@ -42,41 +40,18 @@ jobs:
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
 
-      # 2. Node（Creator 3.8 推荐 Node 16）
+      # 2. Node（Creator 3.8.x 必须 Node 16）
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 16
           cache: 'npm'
 
-      # 4. 安装 npm 依赖
+      # 3. 安装 npm 依赖
       - name: Install dependencies
         run: npm install
-      
-      # 5. Creator 目录准备
-      - name: Prepare Creator dir
-        shell: powershell
-        run: |
-          New-Item -ItemType Directory -Force -Path $env:CREATOR_DIR
 
-      # 5.5 缓存 Cocos Creator
-      - name: Cache Cocos Creator
-        id: cache-creator
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.CREATOR_DIR }}
-          key: cocos-creator-${{ env.CREATOR_VERSION }}
-
-      # 6. 下载 Creator（Windows 官方包）（仅 cache miss）
-      - name: Download Cocos Creator
-        if: steps.cache-creator.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          $url = "https://download.cocos.org/CocosCreator/v${env:CREATOR_VERSION}/CocosCreator-v${env:CREATOR_VERSION}-win-092506.zip"
-          Invoke-WebRequest -Uri $url -OutFile creator.zip
-          Expand-Archive creator.zip -DestinationPath $env:CREATOR_DIR
-
-      # 7. 计算发布环境
+      # 4. 计算发布环境
       - name: Resolve Environment
         shell: powershell
         run: |
@@ -89,7 +64,7 @@ jobs:
           }
           Add-Content $env:GITHUB_ENV "ENV=$env:ENV"
 
-      # 8. 生成版本 & changelog
+      # 5. 生成版本 & changelog（写入源码资源）
       - name: Generate build info
         shell: powershell
         run: |
@@ -110,21 +85,27 @@ jobs:
           }
           "@ | Out-File assets/build-info.json -Encoding utf8
 
-      # 9. Web-Mobile 构建（Windows Creator CLI）
-      - name: Build Web-Mobile
-        shell: powershell
+      # 6. Web-Mobile 构建（✅ 官方 CLI，CI 正解）
+      - name: Build Web-Mobile (CLI)
+        shell: bash
         run: |
-          $exe = Get-ChildItem $env:CREATOR_DIR -Recurse -Filter CocosCreator.exe | Select-Object -First 1
-          if (-not $exe) {
-            Write-Error "CocosCreator.exe not found"
-            exit 1
-          }
-          Write-Host ("Using Creator: " + $exe.FullName)
-          & $exe.FullName `
-            --project "$PWD" `
-            --build "platform=$env:BUILD_PLATFORM;configPath=build-config/buildConfig_web-mobile.json;mode=release"
+          npx cocos build \
+            -p web-mobile \
+            --mode release \
+            --configPath build-config/buildConfig_web-mobile.json
 
-      # 10. 发布到 GitHub Pages
+      # 7. 构建产物校验（防止“假成功”）
+      - name: Verify build output
+        shell: bash
+        run: |
+          echo "==== build output ===="
+          ls -R build || exit 1
+          if [ ! -f "${BUILD_PATH}/index.html" ]; then
+            echo "❌ index.html not found in ${BUILD_PATH}"
+            exit 1
+          fi
+
+      # 8. 发布到 GitHub Pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
