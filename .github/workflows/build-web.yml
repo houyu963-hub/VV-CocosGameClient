@@ -1,14 +1,14 @@
 name: Cocos Web CI/CD
 
+permissions:
+  contents: write
+  
 on:
   # 推送 main / test 分支自动触发
   push:
     branches:
       - main
       - test
-      
-permissions:
-  contents: write
 
   # 手动触发（支持选环境、选分支或 commit）
   workflow_dispatch:
