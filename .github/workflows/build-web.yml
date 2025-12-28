@@ -32,7 +32,7 @@ jobs:
     env:
       CREATOR_VERSION: 3.8.1
       BUILD_PLATFORM: web-mobile
-      BUILD_PATH: build/web-mobile
+      BUILD_PATH: build/web-mobile/web-mobile
       CREATOR_DIR: C:\cocos
 
     steps:
