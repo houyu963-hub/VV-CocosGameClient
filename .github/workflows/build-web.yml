@@ -24,96 +24,100 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
-    # 全局环境变量
     env:
       CREATOR_VERSION: 3.8.1
       BUILD_PLATFORM: web-mobile
       BUILD_PATH: build/web-mobile
+      CREATOR_DIR: C:\cocos
 
     steps:
-      # 1. 拉代码（支持分支 / commit）
+      # 1. 拉代码
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
 
-      # 2. Node 环境（Creator 3.8.x 推荐 Node 16）
+      # 2. Node（Creator 3.8 推荐 Node 16）
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 16
 
-      # 3. npm 缓存（加快依赖安装）
+      # 3. npm 缓存
       - name: Cache npm
         uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
 
-      # 4. 缓存 Cocos Creator 编辑器
+      # 4. 缓存 Cocos Creator
       - name: Cache Cocos Creator
         id: cache-creator
         uses: actions/cache@v4
         with:
-          path: ~/cocos
+          path: ${{ env.CREATOR_DIR }}
           key: cocos-creator-${{ env.CREATOR_VERSION }}
 
-      # 5. 下载并解压 Creator（仅在缓存未命中时执行）
+      # 5. 下载 Creator（Windows 官方包）
       - name: Download Cocos Creator
         if: steps.cache-creator.outputs.cache-hit != 'true'
+        shell: powershell
         run: |
-          mkdir -p ~/cocos
-          curl -fL \
-            -o CocosCreator.zip \
-            https://download.cocos.com/CocosCreator/v${CREATOR_VERSION}/CocosCreator-v${CREATOR_VERSION}-linux-x86_64.zip
-          unzip -q CocosCreator.zip -d ~/cocos
+          New-Item -ItemType Directory -Force -Path $env:CREATOR_DIR
+          Invoke-WebRequest `
+            -Uri https://download.cocos.org/CocosCreator/v${env:CREATOR_VERSION}/CocosCreator-v${env:CREATOR_VERSION}-win-092506.zip`
+            -OutFile creator.zip
+          Expand-Archive creator.zip -DestinationPath $env:CREATOR_DIR
 
-      # 6. 安装 npm 依赖（工具脚本、构建辅助）
+      # 6. 安装 npm 依赖
       - name: Install dependencies
         run: npm install
 
-      # 7. 计算当前发布环境（test / production）
+      # 7. 计算发布环境
       - name: Resolve Environment
+        shell: powershell
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            ENV=${{ github.event.inputs.environment }}
-          elif [ "${{ github.ref }}" = "refs/heads/test" ]; then
-            ENV=test
-          else
-            ENV=production
-          fi
-          echo "ENV=$ENV" >> $GITHUB_ENV
-
-      # 8. 生成版本信息 & changelog（写入游戏资源）
-      - name: Generate build info
-        run: |
-          VERSION=$(git describe --tags --always)
-          TIME=$(date +'%Y-%m-%d %H:%M:%S')
-          COMMIT=$(git rev-parse --short HEAD)
-          MESSAGE=$(git log -1 --pretty=%B)
-          AUTHOR=$(git log -1 --pretty=%an)
-
-          cat <<EOF > assets/build-info.json
-          {
-            "version": "$VERSION",
-            "env": "$ENV",
-            "commit": "$COMMIT",
-            "author": "$AUTHOR",
-            "message": "$MESSAGE",
-            "time": "$TIME"
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $env:ENV="${{ github.event.inputs.environment }}"
+          } elseif ("${{ github.ref }}" -eq "refs/heads/test") {
+            $env:ENV="test"
+          } else {
+            $env:ENV="production"
           }
-          EOF
+          Add-Content $env:GITHUB_ENV "ENV=$env:ENV"
 
-      # 9. 构建 Web-Mobile（核心步骤，使用 Creator Editor CLI）
-      - name: Build Web-Mobile
+      # 8. 生成版本 & changelog
+      - name: Generate build info
+        shell: powershell
         run: |
-          ~/cocos/CocosCreator/Creator/${CREATOR_VERSION}/CocosCreator \
-            --project $(pwd) \
-            --build "platform=${BUILD_PLATFORM};configPath=build-config/buildConfig_web-mobile.json;mode=release"
+          $version = git describe --tags --always
+          $time = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+          $commit = git rev-parse --short HEAD
+          $message = git log -1 --pretty=%B
+          $author = git log -1 --pretty=%an
 
-      # 10. 发布到 GitHub Pages（按环境目录区分）
+          @"
+          {
+            "version": "$version",
+            "env": "$env:ENV",
+            "commit": "$commit",
+            "author": "$author",
+            "message": "$message",
+            "time": "$time"
+          }
+          "@ | Out-File assets/build-info.json -Encoding utf8
+
+      # 9. Web-Mobile 构建（Windows Creator CLI）
+      - name: Build Web-Mobile
+        shell: powershell
+        run: |
+          & "$env:CREATOR_DIR\CocosCreator\Creator\${env:CREATOR_VERSION}\CocosCreator.exe" `
+            --project "$PWD" `
+            --build "platform=${env:BUILD_PLATFORM};configPath=build-config/buildConfig_web-mobile.json;mode=release"
+
+      # 10. 发布到 GitHub Pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
