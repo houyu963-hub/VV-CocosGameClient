@@ -47,19 +47,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 16
-
-      # 3. npm 缓存
-      - name: Cache npm
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          cache: 'npm'
 
       # 4. 安装 npm 依赖
       - name: Install dependencies
         run: npm install
+      
+      # 5. Creator 目录准备
+      - name: Prepare Creator dir
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:CREATOR_DIR
 
-      # 5. 缓存 Cocos Creator
+      # 5.5 缓存 Cocos Creator
       - name: Cache Cocos Creator
         id: cache-creator
         uses: actions/cache@v4
@@ -67,14 +67,12 @@ jobs:
           path: ${{ env.CREATOR_DIR }}
           key: cocos-creator-${{ env.CREATOR_VERSION }}
 
-      # 6. 下载 Creator（Windows 官方包）
+      # 6. 下载 Creator（Windows 官方包）（仅 cache miss）
       - name: Download Cocos Creator
         if: steps.cache-creator.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -ItemType Directory -Force -Path $env:CREATOR_DIR
           $url = "https://download.cocos.org/CocosCreator/v${env:CREATOR_VERSION}/CocosCreator-v${env:CREATOR_VERSION}-win-092506.zip"
-          Write-Host "Downloading: $url"
           Invoke-WebRequest -Uri $url -OutFile creator.zip
           Expand-Archive creator.zip -DestinationPath $env:CREATOR_DIR
 
