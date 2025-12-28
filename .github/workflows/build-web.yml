@@ -68,6 +68,8 @@ jobs:
           New-Item -ItemType Directory -Force -Path $env:CREATOR_DIR
           $url = "https://download.cocos.org/CocosCreator/v${env:CREATOR_VERSION}/CocosCreator-v${env:CREATOR_VERSION}-win-092506.zip"
           Write-Host "Downloading: $url"
+          # 显示下载进度
+          $ProgressPreference = "Continue"
           Invoke-WebRequest -Uri $url -OutFile creator.zip
           Expand-Archive creator.zip -DestinationPath $env:CREATOR_DIR
 
