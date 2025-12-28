@@ -68,8 +68,6 @@ jobs:
           New-Item -ItemType Directory -Force -Path $env:CREATOR_DIR
           $url = "https://download.cocos.org/CocosCreator/v${env:CREATOR_VERSION}/CocosCreator-v${env:CREATOR_VERSION}-win-092506.zip"
           Write-Host "Downloading: $url"
-          # 显示下载进度
-          $ProgressPreference = "Continue"
           Invoke-WebRequest -Uri $url -OutFile creator.zip
           Expand-Archive creator.zip -DestinationPath $env:CREATOR_DIR
 
@@ -115,9 +113,15 @@ jobs:
       - name: Build Web-Mobile
         shell: powershell
         run: |
-          & "$env:CREATOR_DIR\CocosCreator\Creator\${env:CREATOR_VERSION}\CocosCreator.exe" `
+          $exe = Get-ChildItem $env:CREATOR_DIR -Recurse -Filter CocosCreator.exe | Select-Object -First 1
+          if (-not $exe) {
+            Write-Error "CocosCreator.exe not found"
+            exit 1
+          }
+          Write-Host ("Using Creator: " + $exe.FullName)
+          & $exe.FullName `
             --project "$PWD" `
-            --build "platform=${env:BUILD_PLATFORM};configPath=build-config/buildConfig_web-mobile.json;mode=release"
+            --build "platform=$env:BUILD_PLATFORM;configPath=build-config/buildConfig_web-mobile.json;mode=release"
 
       # 10. 发布到 GitHub Pages
       - name: Deploy
