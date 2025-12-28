@@ -2,20 +2,23 @@ name: Cocos Web CI/CD
 
 permissions:
   contents: write
-
+  
 on:
   push:
-    branches: [ main, test ]
-
+    branches:
+      - main
+      - test
   workflow_dispatch:
     inputs:
       environment:
-        description: Deploy environment
+        description: 'Deploy environment'
         required: true
         type: choice
-        options: [ test, production ]
+        options:
+          - test
+          - production
       ref:
-        description: Branch or commit
+        description: 'Branch or commit hash'
         required: true
         default: main
 
@@ -24,27 +27,33 @@ jobs:
     runs-on: windows-latest
 
     env:
+      CREATOR_VERSION: 3.8.1
       BUILD_PLATFORM: web-mobile
-      BUILD_PATH: build/web-mobile/web-mobile
+      BUILD_PATH: build/web-mobile
 
     steps:
-      # 1️⃣ Checkout
-      - uses: actions/checkout@v4
+      # 1. 拉代码
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref || github.ref }}
+          fetch-depth: 0
 
-      # 2️⃣ Node（Creator 3.8 推荐）
-      - uses: actions/setup-node@v4
+      # 2. 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
-          cache: npm
+          node-version: '18'
+          cache: 'npm'
 
-      # 3️⃣ 安装依赖（这里已经包含 cocos CLI）
+      # 3. 安装项目依赖
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm ci
+          # 如果项目使用 yarn，则用: yarn install --frozen-lockfile
 
-      # 4️⃣ 环境判定
-      - name: Resolve Environment
+      # 4. 计算环境变量
+      - name: Resolve Environment Variables
         shell: bash
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -54,45 +63,203 @@ jobs:
           else
             echo "ENV=production" >> $GITHUB_ENV
           fi
+          echo "BUILD_OUTPUT=build/${{ env.BUILD_PLATFORM }}/${{ env.ENV }}" >> $GITHUB_ENV
 
-      # 5️⃣ 生成 build-info.json（保证一定存在）
-      - name: Generate build info
+      # 5. 生成构建信息
+      - name: Generate Build Info
         shell: bash
         run: |
+          # 创建 assets 目录（如果不存在）
           mkdir -p assets
-          cat > assets/build-info.json <<EOF
+          
+          # 获取版本信息
+          VERSION=$(git describe --tags --always 2>/dev/null || echo "dev-$(git rev-parse --short HEAD)")
+          COMMIT=$(git rev-parse --short HEAD)
+          AUTHOR=$(git log -1 --pretty=format:'%an')
+          MESSAGE=$(git log -1 --pretty=format:'%B' | tr -d '\n' | sed 's/"/\\"/g')
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # 创建 build-info.json
+          cat > assets/build-info.json << EOF
           {
-            "version": "$(git describe --tags --always)",
-            "env": "${ENV}",
-            "commit": "$(git rev-parse --short HEAD)",
-            "author": "$(git log -1 --pretty=%an)",
-            "message": "$(git log -1 --pretty=%B | tr '\n' ' ')",
-            "time": "$(date '+%Y-%m-%d %H:%M:%S')"
+            "version": "$VERSION",
+            "environment": "${{ env.ENV }}",
+            "commit": "$COMMIT",
+            "branch": "$BRANCH",
+            "author": "$AUTHOR",
+            "message": "$MESSAGE",
+            "buildTime": "$BUILD_TIME",
+            "platform": "${{ env.BUILD_PLATFORM }}"
           }
           EOF
+          
+          echo "✅ Generated build-info.json:"
+          cat assets/build-info.json
 
-      # 6️⃣ Web 构建（核心）
-      - name: Build Web-Mobile
+      # 6. 设置 Cocos Creator 环境（关键修复）
+      - name: Setup Cocos Creator Environment
+        shell: powershell
+        run: |
+          Write-Host "Setting up Cocos Creator ${{ env.CREATOR_VERSION }} environment..."
+          
+          # 检查是否已缓存
+          $cacheDir = "$env:RUNNER_TEMP\CocosCreator"
+          $cachedMarker = "$cacheDir\.cached_${{ env.CREATOR_VERSION }}"
+          
+          if (Test-Path $cachedMarker) {
+              Write-Host "✅ Using cached Cocos Creator"
+          } else {
+              Write-Host "Downloading Cocos Creator ${{ env.CREATOR_VERSION }}..."
+              
+              # 下载链接
+              $url = "https://download.cocos.org/CocosCreator/v${{ env.CREATOR_VERSION }}/CocosCreator-v${{ env.CREATOR_VERSION }}-win-092506.zip"
+              $zipPath = "$env:RUNNER_TEMP\cocos-creator.zip"
+              
+              # 下载
+              Invoke-WebRequest -Uri $url -OutFile $zipPath
+              
+              # 清空并创建目录
+              if (Test-Path $cacheDir) {
+                  Remove-Item $cacheDir -Recurse -Force
+              }
+              New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+              
+              # 解压
+              Write-Host "Extracting Cocos Creator..."
+              Expand-Archive -Path $zipPath -DestinationPath $cacheDir -Force
+              
+              # 标记已缓存
+              "cached" | Out-File -FilePath $cachedMarker -Encoding utf8
+              Write-Host "✅ Cocos Creator downloaded and cached"
+          }
+          
+          # 查找 CocosCreator.exe
+          $creatorExe = Get-ChildItem -Path $cacheDir -Filter "CocosCreator.exe" -Recurse | Select-Object -First 1
+          
+          if ($creatorExe) {
+              $creatorDir = $creatorExe.DirectoryName
+              Write-Host "Found CocosCreator.exe at: $($creatorExe.FullName)"
+              
+              # 添加到当前会话的 PATH
+              $env:Path = "$creatorDir;$env:Path"
+              
+              # 设置环境变量供后续步骤使用
+              Write-Output "COCOS_CREATOR_DIR=$creatorDir" | Out-File -FilePath $env:GITHUB_ENV -Append
+              Write-Output "COCOS_CREATOR_EXE=$($creatorExe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+              
+              # 验证
+              Write-Host "Verifying Cocos Creator installation..."
+              & $creatorExe.FullName --version 2>&1 | Write-Host
+          } else {
+              Write-Error "❌ CocosCreator.exe not found!"
+              Get-ChildItem -Path $cacheDir -Recurse | ForEach-Object { Write-Host $_.FullName }
+              exit 1
+          }
+
+      # 7. 执行 Cocos 构建（修复的构建命令）
+      - name: Build Cocos Project
+        shell: powershell
+        run: |
+          Write-Host "Starting Cocos Creator build..."
+          Write-Host "Project path: $env:GITHUB_WORKSPACE"
+          Write-Host "Build platform: ${{ env.BUILD_PLATFORM }}"
+          Write-Host "Environment: ${{ env.ENV }}"
+          
+          # 使用 Cocos Creator 可执行文件路径
+          $creatorExe = "$env:COCOS_CREATOR_EXE"
+          
+          if (-not (Test-Path $creatorExe)) {
+              Write-Error "❌ CocosCreator.exe not found at: $creatorExe"
+              exit 1
+          }
+          
+          Write-Host "Using Cocos Creator: $creatorExe"
+          
+          # 构建命令参数
+          $projectPath = "$env:GITHUB_WORKSPACE"
+          $buildConfig = @{
+              platform = "${{ env.BUILD_PLATFORM }}"
+              configPath = "build-config/buildConfig_web-mobile.json"
+              mode = "release"
+          }
+          
+          # 将构建配置转换为字符串
+          $buildConfigStr = ($buildConfig.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" }) -join ';'
+          
+          Write-Host "Build config: $buildConfigStr"
+          
+          # 执行构建命令
+          Write-Host "Executing build command..."
+          
+          # 方法1：直接调用 CocosCreator.exe（推荐）
+          & $creatorExe --project "$projectPath" --build "$buildConfigStr"
+          
+          $exitCode = $LASTEXITCODE
+          
+          if ($exitCode -ne 0) {
+              Write-Error "❌ Build failed with exit code: $exitCode"
+              exit $exitCode
+          }
+          
+          Write-Host "✅ Build completed successfully!"
+          
+          # 检查构建输出
+          $outputDir = "$projectPath\build\${{ env.BUILD_PLATFORM }}"
+          if (Test-Path $outputDir) {
+              Write-Host "Build output at: $outputDir"
+              Get-ChildItem -Path $outputDir -Recurse | 
+                  Where-Object { $_.Extension -in @('.html', '.js', '.json') } | 
+                  ForEach-Object { Write-Host "  $($_.FullName)" }
+              
+              # 验证关键文件
+              $indexFile = "$outputDir\index.html"
+              if (Test-Path $indexFile) {
+                  Write-Host "✅ index.html found: $indexFile"
+              } else {
+                  Write-Error "❌ index.html not found in build output"
+                  exit 1
+              }
+          } else {
+              Write-Error "❌ Build output directory not found: $outputDir"
+              exit 1
+          }
+
+      # 8. 准备部署目录
+      - name: Prepare Deployment Directory
         shell: bash
         run: |
-          npx cocos build \
-            -p web-mobile \
-            --mode release \
-            --configPath build-config/buildConfig_web-mobile.json
+          echo "Preparing deployment directory..."
+          BUILD_SOURCE="build/${{ env.BUILD_PLATFORM }}"
+          BUILD_TARGET="build/${{ env.BUILD_PLATFORM }}/${{ env.ENV }}"
+          
+          # 如果目标目录已存在，先删除
+          if [ -d "$BUILD_TARGET" ]; then
+            rm -rf "$BUILD_TARGET"
+          fi
+          
+          # 复制构建结果到环境特定目录
+          mkdir -p "$BUILD_TARGET"
+          cp -r "$BUILD_SOURCE/"* "$BUILD_TARGET/" 2>/dev/null || true
+          
+          echo "Deployment directory ready: $BUILD_TARGET"
+          ls -la "$BUILD_TARGET/"
 
-      # 7️⃣ 校验构建结果
-      - name: Verify output
-        shell: bash
-        run: |
-          test -d "${BUILD_PATH}" || (echo "❌ build output missing" && exit 1)
-          ls -la "${BUILD_PATH}"
-
-      # 8️⃣ Deploy
+      # 9. 部署到 GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ env.BUILD_PATH }}
-          destination_dir: ${{ env.ENV }}
+          # 部署环境特定的目录
+          publish_dir: build/${{ env.BUILD_PLATFORM }}/${{ env.ENV }}
+          # 可选的发布分支，默认为 gh-pages
           publish_branch: gh-pages
-          enable_jekyll: false
+          # 保留文件设置为 false，确保每次部署都是干净的
+          keep_files: false
+          # 可选的提交信息
+          commit_message: |
+            Deploy ${{ env.ENV }} build
+            Version: $(git describe --tags --always 2>/dev/null || echo "dev")
+            Commit: $(git rev-parse --short HEAD)
+          # 如果构建目录为空则强制推送
+          force_orphan: true
