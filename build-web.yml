@@ -1,0 +1,416 @@
+name: Cocos Web CI/CD
+
+permissions:
+  contents: write
+  
+on:
+  push:
+    branches:
+      - main
+      - test
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deploy environment'
+        required: true
+        type: choice
+        options:
+          - test
+          - production
+      ref:
+        description: 'Branch or commit hash'
+        required: true
+        default: main
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    env:
+      CREATOR_VERSION: 3.8.1
+      BUILD_PLATFORM: web-mobile
+      BUILD_PATH: build/web-mobile
+
+    steps:
+      # 1. 拉代码
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+          fetch-depth: 0
+
+      # 2. 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      # 3. 安装项目依赖
+      - name: Install dependencies
+        run: |
+          npm ci
+
+      # 4. 计算环境变量
+      - name: Resolve Environment Variables
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          elif [ "${{ github.ref }}" = "refs/heads/test" ]; then
+            echo "ENV=test" >> $GITHUB_ENV
+          else
+            echo "ENV=production" >> $GITHUB_ENV
+          fi
+
+      # 5. 生成构建信息
+      - name: Generate Build Info
+        shell: bash
+        run: |
+          # 创建 assets 目录（如果不存在）
+          mkdir -p assets
+          
+          # 获取版本信息
+          VERSION=$(git describe --tags --always 2>/dev/null || echo "dev-$(git rev-parse --short HEAD)")
+          COMMIT=$(git rev-parse --short HEAD)
+          AUTHOR=$(git log -1 --pretty=format:'%an')
+          MESSAGE=$(git log -1 --pretty=format:'%B' | tr -d '\n' | sed 's/"/\\"/g')
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          cat > assets/build-info.json << EOF
+          {
+            "version": "$VERSION",
+            "environment": "${{ env.ENV }}",
+            "commit": "$COMMIT",
+            "branch": "$BRANCH",
+            "author": "$AUTHOR",
+            "message": "$MESSAGE",
+            "buildTime": "$BUILD_TIME",
+            "platform": "${{ env.BUILD_PLATFORM }}"
+          }
+          EOF
+          
+          echo "✅ Generated build-info.json:"
+          cat assets/build-info.json
+
+      # 6. 设置 Cocos Creator 环境（修复验证问题）
+      - name: Setup Cocos Creator Environment
+        shell: powershell
+        run: |
+          Write-Host "Setting up Cocos Creator ${{ env.CREATOR_VERSION }} environment..."
+          
+          # 创建用户数据目录，避免配置文件加载错误
+          $userDataDir = "$env:RUNNER_TEMP\CocosUserData"
+          New-Item -ItemType Directory -Path $userDataDir -Force | Out-Null
+          
+          # 设置环境变量，避免 Cocos Creator 加载用户配置文件
+          $env:USERPROFILE = $userDataDir
+          $env:COCOS_CREATOR_EDITOR_DATA_DIR = $userDataDir
+          
+          Write-Output "USERPROFILE=$userDataDir" | Out-File -FilePath $env:GITHUB_ENV -Append
+          Write-Output "COCOS_CREATOR_EDITOR_DATA_DIR=$userDataDir" | Out-File -FilePath $env:GITHUB_ENV -Append
+          
+          # 检查是否已缓存
+          $cacheDir = "$env:RUNNER_TEMP\CocosCreator"
+          $cachedMarker = "$cacheDir\.cached_${{ env.CREATOR_VERSION }}"
+          
+          if (Test-Path $cachedMarker) {
+              Write-Host "✅ Using cached Cocos Creator"
+          } else {
+              Write-Host "Downloading Cocos Creator ${{ env.CREATOR_VERSION }}..."
+              
+              # 下载链接
+              $url = "https://download.cocos.org/CocosCreator/v${{ env.CREATOR_VERSION }}/CocosCreator-v${{ env.CREATOR_VERSION }}-win-092506.zip"
+              $zipPath = "$env:RUNNER_TEMP\cocos-creator.zip"
+              
+              # 下载
+              try {
+                  Invoke-WebRequest -Uri $url -OutFile $zipPath
+              } catch {
+                  Write-Error "❌ Failed to download Cocos Creator from: $url"
+                  Write-Error "Error: $_"
+                  exit 1
+              }
+              
+              # 清空并创建目录
+              if (Test-Path $cacheDir) {
+                  Remove-Item $cacheDir -Recurse -Force
+              }
+              New-Item -ItemType Directory -Path $cacheDir -Force | Out-Null
+              
+              # 解压
+              Write-Host "Extracting Cocos Creator..."
+              try {
+                  Expand-Archive -Path $zipPath -DestinationPath $cacheDir -Force
+              } catch {
+                  Write-Error "❌ Failed to extract Cocos Creator archive"
+                  Write-Error "Error: $_"
+                  exit 1
+              }
+              
+              # 标记已缓存
+              "cached" | Out-File -FilePath $cachedMarker -Encoding utf8
+              Write-Host "✅ Cocos Creator downloaded and cached"
+          }
+          
+          # 查找 CocosCreator.exe
+          $creatorExe = Get-ChildItem -Path $cacheDir -Filter "CocosCreator.exe" -Recurse | Select-Object -First 1
+          
+          if ($creatorExe) {
+              $creatorDir = $creatorExe.DirectoryName
+              Write-Host "Found CocosCreator.exe at: $($creatorExe.FullName)"
+              
+              # 添加到当前会话的 PATH
+              $env:Path = "$creatorDir;$env:Path"
+              
+              # 设置环境变量供后续步骤使用
+              Write-Output "COCOS_CREATOR_DIR=$creatorDir" | Out-File -FilePath $env:GITHUB_ENV -Append
+              Write-Output "COCOS_CREATOR_EXE=$($creatorExe.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+              
+              # 简化验证：只检查文件是否存在，不运行版本命令
+              Write-Host "Verifying Cocos Creator installation..."
+              if (Test-Path $creatorExe.FullName) {
+                  Write-Host "✅ Cocos Creator executable verified"
+              } else {
+                  Write-Error "❌ Cocos Creator executable not found"
+                  exit 1
+              }
+          } else {
+              Write-Error "❌ CocosCreator.exe not found!"
+              Write-Host "Directory structure:"
+              Get-ChildItem -Path $cacheDir -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
+              exit 1
+          }
+
+      # 7. 执行 Cocos 构建（优化版本）
+      - name: Build Cocos Project
+        shell: powershell
+        env:
+          USERPROFILE: ${{ runner.temp }}\CocosUserData
+        run: |
+          # 确保用户数据目录存在
+          New-Item -ItemType Directory -Path $env:USERPROFILE -Force | Out-Null
+          
+          Write-Host "Starting Cocos Creator build..."
+          Write-Host "Project path: $env:GITHUB_WORKSPACE"
+          Write-Host "Build platform: ${{ env.BUILD_PLATFORM }}"
+          Write-Host "Environment: ${{ env.ENV }}"
+          
+          # 使用 Cocos Creator 可执行文件路径
+          $creatorExe = "$env:COCOS_CREATOR_EXE"
+          
+          if (-not (Test-Path $creatorExe)) {
+              Write-Error "❌ CocosCreator.exe not found at: $creatorExe"
+              Write-Host "Available environment variables:"
+              Get-ChildItem Env: | Where-Object { $_.Name -like "*COCOS*" } | ForEach-Object { Write-Host "  $($_.Name)=$($_.Value)" }
+              exit 1
+          }
+          
+          Write-Host "Using Cocos Creator: $creatorExe"
+          
+          # 检查构建配置文件是否存在
+          $configPath = "build-config/buildConfig_web-mobile.json"
+          if (Test-Path $configPath) {
+              Write-Host "Using build config: $configPath"
+              $buildArgs = "platform=${{ env.BUILD_PLATFORM }};mode=release;configPath=$configPath"
+          } else {
+              Write-Host "No build config found, using default settings"
+              $buildArgs = "platform=${{ env.BUILD_PLATFORM }};mode=release"
+          }
+          
+          Write-Host "Build arguments: $buildArgs"
+          
+          # 执行构建命令，捕获输出
+          $logFile = "$env:RUNNER_TEMP\cocos-build.log"
+          $outputFile = "$env:RUNNER_TEMP\cocos-output.txt"
+          $errorFile = "$env:RUNNER_TEMP\cocos-error.txt"
+          
+          Write-Host "Executing build command..."
+          
+          # 创建进程信息
+          $processInfo = New-Object System.Diagnostics.ProcessStartInfo
+          $processInfo.FileName = $creatorExe
+          $processInfo.Arguments = "--project `"$env:GITHUB_WORKSPACE`" --build `"$buildArgs`" --log `"$logFile`""
+          $processInfo.RedirectStandardOutput = $true
+          $processInfo.RedirectStandardError = $true
+          $processInfo.UseShellExecute = $false
+          $processInfo.CreateNoWindow = $true
+          
+          $process = New-Object System.Diagnostics.Process
+          $process.StartInfo = $processInfo
+          
+          try {
+              $process.Start() | Out-Null
+              
+              # 异步读取输出，避免死锁
+              $stdoutTask = $process.StandardOutput.ReadToEndAsync()
+              $stderrTask = $process.StandardError.ReadToEndAsync()
+              
+              $process.WaitForExit()
+              
+              $stdout = $stdoutTask.Result
+              $stderr = $stderrTask.Result
+              
+              # 保存输出
+              $stdout | Out-File -FilePath $outputFile -Encoding UTF8
+              $stderr | Out-File -FilePath $errorFile -Encoding UTF8
+              
+              $exitCode = $process.ExitCode
+              
+              # 显示输出
+              if ($stdout) {
+                  Write-Host "=== Standard Output ==="
+                  Write-Host $stdout
+              }
+              
+              if ($stderr) {
+                  Write-Host "=== Standard Error ==="
+                  Write-Host $stderr
+              }
+              
+          } catch {
+              Write-Error "❌ Failed to execute build command"
+              Write-Error "Error: $_"
+              exit 1
+          } finally {
+              if (-not $process.HasExited) {
+                  $process.Kill()
+              }
+          }
+          
+          # 显示日志文件内容（如果有）
+          if (Test-Path $logFile) {
+              Write-Host "=== Build Log (last 50 lines) ==="
+              Get-Content $logFile -Tail 50
+          }
+          
+          if ($exitCode -eq 0) {
+              Write-Host "✅ Build completed successfully!"
+          } else {
+              Write-Error "❌ Build failed with exit code: $exitCode"
+              if (Test-Path $errorFile) {
+                  Write-Host "=== Error Details ==="
+                  Get-Content $errorFile
+              }
+              exit $exitCode
+          }
+          
+          # 检查构建输出
+          $outputDir = "$env:GITHUB_WORKSPACE\build\${{ env.BUILD_PLATFORM }}"
+          if (Test-Path $outputDir) {
+              Write-Host "Build output at: $outputDir"
+              
+              # 检查主要文件
+              $files = Get-ChildItem -Path $outputDir -Recurse -File | 
+                  Where-Object { $_.Extension -in @('.html', '.js', '.json', '.wasm') -or $_.Name -in @('project.json', 'settings.json') }
+              
+              if ($files.Count -gt 0) {
+                  Write-Host "Found $($files.Count) build files:"
+                  $files | ForEach-Object { 
+                      $relativePath = $_.FullName.Substring($outputDir.Length + 1)
+                      Write-Host "  $relativePath ($($_.Length) bytes)"
+                  }
+                  
+                  # 验证关键文件
+                  $indexFile = "$outputDir\index.html"
+                  if (Test-Path $indexFile) {
+                      Write-Host "✅ index.html found"
+                      
+                      # 简单验证 index.html 内容
+                      $content = Get-Content $indexFile -Raw
+                      if ($content -match '<html') {
+                          Write-Host "✅ index.html appears to be valid HTML"
+                      }
+                  } else {
+                      Write-Host "⚠️ index.html not found, checking for other HTML files..."
+                      $htmlFiles = Get-ChildItem -Path $outputDir -Filter "*.html" -Recurse
+                      if ($htmlFiles.Count -gt 0) {
+                          Write-Host "Found HTML files:"
+                          $htmlFiles | ForEach-Object { Write-Host "  $($_.FullName)" }
+                      }
+                  }
+              } else {
+                  Write-Error "❌ No build files found in output directory"
+                  exit 1
+              }
+          } else {
+              Write-Error "❌ Build output directory not found: $outputDir"
+              exit 1
+          }
+
+            # 8. 准备部署目录（增强版）
+      - name: Prepare Deployment Directory
+        id: prepare-deployment
+        shell: powershell
+        run: |
+          Write-Host "Preparing deployment directory..."
+          
+          $sourceDir = "build/${{ env.BUILD_PLATFORM }}"
+          $targetDir = "build/${{ env.BUILD_PLATFORM }}/${{ env.ENV }}"
+          
+          Write-Host "Source directory: $sourceDir"
+          Write-Host "Target directory: $targetDir"
+          
+          # 检查源目录是否存在且有文件
+          if (-not (Test-Path $sourceDir)) {
+              Write-Host "❌ Source directory does not exist"
+              Write-Output "has_files=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              exit 0
+          }
+          
+          # 统计源目录中的文件
+          $fileCount = (Get-ChildItem -Path $sourceDir -Recurse -File | Measure-Object).Count
+          Write-Host "Found $fileCount files in source directory"
+          
+          if ($fileCount -eq 0) {
+              Write-Host "⚠️ No files to deploy"
+              Write-Output "has_files=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              exit 0
+          }
+          
+          # 如果目标目录已存在，先删除
+          if (Test-Path $targetDir) {
+              Write-Host "Cleaning existing target directory..."
+              Remove-Item $targetDir -Recurse -Force
+          }
+          
+          # 创建目标目录并复制文件
+          New-Item -ItemType Directory -Path $targetDir -Force | Out-Null
+          
+          Write-Host "Copying files from source to target..."
+          Copy-Item -Path "$sourceDir\*" -Destination $targetDir -Recurse -Force
+          
+          # 验证复制后的文件
+          $copiedCount = (Get-ChildItem -Path $targetDir -Recurse -File | Measure-Object).Count
+          Write-Host "Copied $copiedCount files to target directory"
+          
+          if ($copiedCount -gt 0) {
+              Write-Host "✅ Deployment directory prepared with $copiedCount files"
+              Write-Output "has_files=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+              
+              # 列出前10个文件
+              Write-Host "Top 10 files in target directory:"
+              Get-ChildItem -Path $targetDir -Recurse -File | 
+                  Select-Object -First 10 | 
+                  ForEach-Object { Write-Host "  $($_.FullName)" }
+          } else {
+              Write-Host "⚠️ No files were copied to target directory"
+              Write-Output "has_files=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          }
+
+      # 9. 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        # 正确语法：整个表达式用 ${{ }} 包裹
+        if: ${{ success() && steps.prepare-deployment.outputs.has_files == 'true' }}
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/${{ env.BUILD_PLATFORM }}/${{ env.ENV }}
+          publish_branch: gh-pages
+          keep_files: false
+          commit_message: |
+            Deploy ${{ env.ENV }} build
+            Version: ${{ steps.prepare-deployment.outputs.version || 'dev' }}
+            Commit: ${{ steps.prepare-deployment.outputs.commit }}
+          force_orphan: true

@@ -1,4 +1,4 @@
-import { Bundle_name } from "db://assets/frame/config/Config"
+import { Bundle_name } from "../config/Define"
 
 export interface IPopupConfig {
     popupPath: string,      // 弹窗路径

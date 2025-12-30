@@ -1,11 +1,11 @@
 import { _decorator, EditBox, EventTouch, sys } from "cc";
-import { Config, Scene_name } from "../../frame/config/Config";
+import { Config, } from "../../frame/config/Config";
+import { ChannelType, LoginPlatform, Platform, Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
 import Thirdparty, { NativeEventId } from "../../frame/system/Thirdparty";
 import { SceneBase } from "../../frame/ui/SceneBase";
 import SceneNavigator from "../../frame/ui/SceneNavigator";
 import LoginHander from "./LoginHander";
-import { ChannelType, LoginPlatform, Platform } from "../../frame/config/Define";
 
 const { ccclass, property } = _decorator;
 @ccclass
@@ -33,7 +33,7 @@ export default class Login extends SceneBase {
     }
 
     private _onBtLogin(): void {
-        if (Config.platform == Platform.Wechat) {
+        if (Config.platform == Platform.Mini) {
             LoginHander.instance.toWechatLogin()
         }
         else {

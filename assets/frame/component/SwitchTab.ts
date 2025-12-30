@@ -1,6 +1,6 @@
 import { CCBoolean, CCInteger, Component, EventHandler, Node, _decorator } from "cc";
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from "../Core";
-import { Bundle_name } from "../config/Config";
 import ToggleGroup from "./ToggleGroup";
 
 /**

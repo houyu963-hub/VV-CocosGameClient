@@ -4,7 +4,7 @@ import { Action } from "db://assets/common/mahjong/script/Operate";
 import GameClient, { MYSELF_VIEW_ID } from "db://assets/common/script/GameClient";
 import RoomModel from "db://assets/common/script/RoomModel";
 import Timer from "db://assets/frame/component/Timer";
-import { Config } from "db://assets/frame/config/Config";
+import { ChannelConfig } from "db://assets/frame/config/ChannelConfig";
 import { PopupName } from "db://assets/frame/ui/PopupConfig";
 import SceneNavigator from "db://assets/frame/ui/SceneNavigator";
 import { Battle, Enum, Match } from "db://assets/resources/pbjs";
@@ -138,7 +138,7 @@ export default class Mahjong extends GameClient {
             default:
                 break;
         }
-        this.$('_debug').active = Config.debug && sys.isBrowser;
+        this.$('_debug').active = ChannelConfig.debug && sys.isBrowser;
     }
 
     // 初始化准备按钮

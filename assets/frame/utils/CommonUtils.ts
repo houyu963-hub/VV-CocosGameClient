@@ -1,11 +1,12 @@
 const jsb = (<any>window).jsb;
 
 import { assetManager, game, Label, misc, Node, rect, Rect, resources, Sprite, SpriteFrame, sys, tween, Tween, UITransform, v2, Vec2, Vec3 } from "cc";
-import { Bundle_name, Config, Scene_name } from "db://assets/frame/config/Config";
-import { CurrencySymbol, ErrorCode } from "db://assets/frame/config/Define";
+import { Bundle_name, CurrencySymbol, Scene_name, } from "db://assets/frame/config/Define";
 import SceneNavigator from "db://assets/frame/ui/SceneNavigator";
 import vv from "../../frame/Core";
 import { PopupName } from "../../frame/ui/PopupConfig";
+import { Config } from "../config/Config";
+import { ErrorCode } from "../config/ErrorCode";
 
 /**
  * 工具类
@@ -898,7 +899,7 @@ export default class CommonUtils {
      * 是否下载过游戏
      */
     public async isDownloadedGame(gameType: number): Promise<boolean> {
-        if (!jsb || Config.testApk) {
+        if (!jsb) {
             return true;
         }
         let version = await this.getVersion(gameType);

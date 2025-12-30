@@ -1,5 +1,5 @@
 import { _decorator } from "cc";
-import { Bundle_name, Scene_name } from "../../frame/config/Config";
+import { Bundle_name, Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
 import { SceneBase } from "../../frame/ui/SceneBase";
 import SceneNavigator from "../../frame/ui/SceneNavigator";

@@ -1,8 +1,9 @@
 const jsb = (<any>window).jsb;
 
 import { Asset, AssetManager, Constructor, ImageAsset, Prefab, SpriteFrame, Texture2D, assetManager, isValid, resources } from "cc";
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from "../Core";
-import { Bundle_name, Config } from "../config/Config";
+import { Config } from "../config/Config";
 
 /**
  * 资源加载
@@ -35,8 +36,8 @@ export default class AssetBundle {
                     resolve(bundle);
                 })
             }
-            // web和测试包直接加载包内的
-            if (!jsb || Config.testApk) {
+            // web
+            if (!jsb) {
                 loadBundle(dirPath);
                 return;
             }

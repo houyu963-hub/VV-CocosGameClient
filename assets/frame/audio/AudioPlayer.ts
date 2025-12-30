@@ -1,6 +1,6 @@
 import { AudioClip, AudioSource } from "cc";
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from "../Core";
-import { Bundle_name } from "../config/Config";
 
 /**
  * 音频播放

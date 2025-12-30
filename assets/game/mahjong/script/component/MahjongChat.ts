@@ -1,6 +1,6 @@
 import { _decorator, instantiate, Label, Node, Sprite, SpriteFrame } from 'cc';
 import List from 'db://assets/frame/component/List';
-import { Bundle_name } from 'db://assets/frame/config/Config';
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from 'db://assets/frame/Core';
 import BaseClass from 'db://assets/frame/ui/BaseClass';
 import PopupBase from 'db://assets/frame/ui/PopupBase';

@@ -1,8 +1,8 @@
 import { _decorator, find, instantiate, Prefab, Widget } from 'cc';
-import { Bundle_name, Scene_name } from 'db://assets/frame/config/Config';
 import Thirdparty, { NativeEventId } from 'db://assets/frame/system/Thirdparty';
 import vv from '../Core';
 import ClickEffect from '../component/ClickEffect';
+import { Bundle_name, Scene_name } from '../config/Define';
 import BaseClass from './BaseClass';
 import { PopupName } from './PopupConfig';
 import SceneNavigator from './SceneNavigator';

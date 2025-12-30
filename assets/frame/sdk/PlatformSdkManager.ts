@@ -1,8 +1,8 @@
-import { Config } from '../config/Config';
+import { ChannelConfig } from '../config/ChannelConfig';
 import { Platform } from '../config/Define';
+import { MiniGamePlatformImpl } from './impl/MiniGamePlatformImpl';
 import { NativePlatformImpl } from './impl/NativePlatformImpl';
 import { WebPlatformImpl } from './impl/WebPlatformImpl';
-import { WechatMiniGamePlatformImpl } from './impl/WechatMiniGamePlatformImpl';
 import { IPlatformApi } from './PlatformApi';
 
 export class PlatformSdkManager {
@@ -16,7 +16,7 @@ export class PlatformSdkManager {
     // 初始化 (游戏启动时)
     public initialize(): void {
         if (this.currentPlatform) return;
-        let platform = Config.platform;
+        let platform = ChannelConfig.platform;
         switch (platform) {
             case Platform.Android:
             case Platform.IOS:
@@ -25,8 +25,8 @@ export class PlatformSdkManager {
             case Platform.Web:
                 this.initWebPlatform(); // Web平台
                 break;
-            case Platform.Wechat: // 微信小游戏环境
-                this.initWechatMiniGame();
+            case Platform.Mini: // 小游戏环境
+                this.initMiniGame();
                 break;
             default:
                 break;
@@ -42,9 +42,9 @@ export class PlatformSdkManager {
     }
 
     // =============== 私有方法 ===============
-    private initWechatMiniGame(): void {
-        console.log('[PlatformSDK] 检测到微信小游戏环境');
-        this.currentPlatform = new WechatMiniGamePlatformImpl();
+    private initMiniGame(): void {
+        console.log('[PlatformSDK] 检测到微信小游戏平台环境');
+        this.currentPlatform = new MiniGamePlatformImpl();
     }
 
     private initNativePlatform(): void {

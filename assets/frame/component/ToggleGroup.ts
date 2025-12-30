@@ -1,6 +1,6 @@
 import { Button, CCBoolean, CCInteger, Component, EventHandler, Node, _decorator } from "cc";
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from "../Core";
-import { Bundle_name } from "../config/Config";
 import ActiveNode from "./ActiveNode";
 import ActiveSprite from "./ActiveSprite";
 

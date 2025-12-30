@@ -1,6 +1,6 @@
 import { native, sys } from "cc";
 import vv from "../Core";
-import { Config } from "../config/Config";
+import { ChannelConfig } from "../config/ChannelConfig";
 
 // cocos调用安卓接口
 export enum NativeEventId {
@@ -19,7 +19,7 @@ export default class Thirdparty {
     public static initBrowserParam(): void {
         this.browser_params = this.getHrefParam();
         if (this.browser_params?.server) {
-            Config.server_http_address = this.browser_params.server;
+            ChannelConfig.server_http_address = this.browser_params.server;
         }
     }
 

@@ -1,7 +1,8 @@
 import { CCInteger, Component, Enum, JsonAsset, _decorator, sys } from 'cc';
 import { EDITOR } from 'cc/env';
-import { Bundle_name, Config } from 'db://assets/frame/config/Config';
+import { Config } from 'db://assets/frame/config/Config';
 import vv from '../Core';
+import { Bundle_name } from '../config/Define';
 const { ccclass, property, executeInEditMode } = _decorator;
 
 /** 

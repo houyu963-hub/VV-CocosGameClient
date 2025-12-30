@@ -1,5 +1,5 @@
 import { director } from "cc";
-import { Scene_name } from "db://assets/frame/config/Config";
+import { Scene_name } from "../config/Define";
 
 /**
  * 场景导航类

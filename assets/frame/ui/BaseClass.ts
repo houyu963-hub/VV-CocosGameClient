@@ -1,6 +1,6 @@
 import { Button, Component, EventHandler, Node, Toggle, _decorator, warn } from "cc";
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from "../Core";
-import { Bundle_name } from "../config/Config";
 
 const { ccclass } = _decorator;
 

@@ -1,4 +1,4 @@
-import { Bundle_name, Scene_name } from "../../frame/config/Config";
+import { Bundle_name, Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
 import SceneNavigator from "../../frame/ui/SceneNavigator";
 import { Battle, Enum, Match } from "../../resources/pbjs";

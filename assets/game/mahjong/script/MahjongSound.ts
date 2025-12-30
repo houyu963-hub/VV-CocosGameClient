@@ -1,4 +1,4 @@
-import { Bundle_name } from '../../../frame/config/Config';
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from '../../../frame/Core';
 
 /**

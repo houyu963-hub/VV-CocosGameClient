@@ -1,0 +1,8 @@
+{
+    "description": "官方外网测试环境配置",
+    "debug": false,
+    "platform": "android",
+    "channel": "xiaomi",
+    "server_http_address": "https://app.taishunmj.xiaomi.com",
+    "public_http_address": "https://app.taishunmj.xiaomi.com"
+}

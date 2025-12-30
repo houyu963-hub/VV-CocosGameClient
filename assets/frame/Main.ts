@@ -3,6 +3,7 @@ import { EDITOR } from "cc/env";
 import { Config } from "db://assets/frame/config/Config";
 import vv from "./Core";
 import ThirdpartyListener from "./listener/ThirdpartyListener";
+import { PlatformSdkManager } from "./sdk/PlatformSdkManager";
 import Thirdparty from "./system/Thirdparty";
 
 class Main {
@@ -15,7 +16,9 @@ class Main {
         // 启动服务
         vv.services.add(ThirdpartyListener);
         vv.services.init();
-
+        // 初始化第三方sdk
+        PlatformSdkManager.getInstance().initialize();
+        // 初始化浏览器参数 仅限于web
         Thirdparty.initBrowserParam();
         // 设置帧率
         game.frameRate = 120;

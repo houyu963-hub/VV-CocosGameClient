@@ -1,7 +1,8 @@
 const jsb = (<any>window).jsb;
 
 import { Asset, Button, JsonAsset, Label, ProgressBar, _decorator, sys } from "cc";
-import { Bundle_name, Config, Scene_name } from "../../frame/config/Config";
+import { Config } from "../../frame/config/Config";
+import { Bundle_name, Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
 import Thirdparty, { NativeEventId } from "../../frame/system/Thirdparty";
 import { SceneBase } from "../../frame/ui/SceneBase";
@@ -30,11 +31,6 @@ export default class Loading extends SceneBase {
         this.showVersion();
         if (!jsb) {
             vv.logger.forceLog('web跳过热更新');
-            this.loadRes();
-            return;
-        }
-        if (Config.testApk) {
-            vv.logger.forceLog('测试包跳过热更新');
             this.loadRes();
             return;
         }

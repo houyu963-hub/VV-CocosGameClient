@@ -1,6 +1,6 @@
 import { Enum, Sprite, SpriteFrame, _decorator, assetManager, sys } from 'cc';
 import { EDITOR } from 'cc/env';
-import { Bundle_name } from 'db://assets/frame/config/Config';
+import { Bundle_name } from 'db://assets/frame/config/Define';
 import vv from '../Core';
 import LocalizationBase, { Lang } from './LocalizationBase';
 const BUNDLE_ENUM = createBundleEnum();
