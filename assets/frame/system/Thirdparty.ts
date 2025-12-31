@@ -19,7 +19,7 @@ export default class Thirdparty {
     public static initBrowserParam(): void {
         this.browser_params = this.getHrefParam();
         if (this.browser_params?.server) {
-            ChannelConfig.server_http_address = this.browser_params.server;
+            ChannelConfig.serverUrl = this.browser_params.server;
         }
     }
 

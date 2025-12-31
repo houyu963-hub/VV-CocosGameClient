@@ -58,7 +58,7 @@ export default class Http {
                 }
             }
             xhr.timeout = 6000;
-            let route = Config.server_http_address + url;
+            let route = Config.serverUrl + url;
             xhr.open(type, route, true);
             vv.logger.logSend('request url:' + route);
             vv.logger.log('param:' + (typeof (params) === 'object' ? JSON.stringify(params) : params));

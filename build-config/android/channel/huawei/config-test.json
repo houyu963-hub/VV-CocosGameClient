@@ -1,8 +1,0 @@
-{
-    "description": "华为外网测试环境配置",
-    "debug": false,
-    "platform": "android",
-    "channel": "huawei",
-    "server_http_address": "https://app.taishunmj.huawei.com",
-    "public_http_address": "https://app.taishunmj.huawei.com"
-}

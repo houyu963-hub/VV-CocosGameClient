@@ -1,0 +1,10 @@
+{
+    "description": "ios内网开发环境配置",
+    "env": "dev",
+    "debug": "true",
+    "platform": "ios",
+    "channel": "appstore",
+    "serverUrl": "https://dev.api.xxx.com",
+    "public_http_address": "https://dev.api.xxx.com",
+    "hotupdateUrl": "https://dev.cdn.xxx.com/ios"
+}

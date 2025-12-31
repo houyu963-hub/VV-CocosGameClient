@@ -1,8 +1,0 @@
-{
-    "description": "小米外网生产环境配置",
-    "debug": false,
-    "platform": "android",
-    "channel": "xiaomi",
-    "server_http_address": "https://app.taishunmj.xiaomi.com",
-    "public_http_address": "https://app.taishunmj.xiaomi.com"
-}

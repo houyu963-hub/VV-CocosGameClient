@@ -1,14 +1,12 @@
 const jsb = (<any>window).jsb;
 
-import { Asset, Button, JsonAsset, Label, ProgressBar, _decorator, sys } from "cc";
-import { Config } from "../../frame/config/Config";
+import { Asset, Button, Label, ProgressBar, _decorator } from "cc";
 import { Bundle_name, Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
 import Thirdparty, { NativeEventId } from "../../frame/system/Thirdparty";
 import { SceneBase } from "../../frame/ui/SceneBase";
 import SceneNavigator from "../../frame/ui/SceneNavigator";
 import root from "../../resources/pbjs.js";
-import TableManager from "../../resources/script/tables/TableManager";
 import { HotUpdate } from "./HotUpdate";
 import LoginHander from "./LoginHander";
 const { ccclass, property } = _decorator;
@@ -45,24 +43,28 @@ export default class Loading extends SceneBase {
         vv.event.removeAllByTarget(this);
     }
 
+    // 已经最新版本
     private already_up_to_date(gameType: number): void {
         if (gameType === 0) {
             this.loadRes();
         }
     }
 
+    // 有新版本
     private async new_version_found(gameType: number): Promise<void> {
         if (gameType === 0) {
             this.hotUpdate.hotUpdate();
         }
     }
 
+    // 热更新失败
     private async update_failed(gameType: number): Promise<void> {
         if (gameType === 0) {
             this.$('_btFix').active = true;
         }
     }
 
+    // 显示版本号
     private async showVersion(): Promise<void> {
         let version = await vv.utils.getVersion();
         this.$('_version', Label).string = `版本:${version}`;
@@ -82,31 +84,12 @@ export default class Loading extends SceneBase {
             fialReason = error;
         })
         this.initGlobalVariable();
-
-        let cconfig: JsonAsset = await vv.asset.loadRes("config/config", JsonAsset, null, Bundle_name.Resources).catch((error) => {
-            return null
-        })
-        if (null != cconfig) {
-            Config.hash = cconfig.json.hash || "";
-            let needAssign = true;
-            if ((sys.platform == sys.Platform.MOBILE_BROWSER || sys.platform == sys.Platform.DESKTOP_BROWSER) && null != Thirdparty.browser_params) {
-                needAssign = false;
-            }
-            if (needAssign) {
-                Object.assign(Config, cconfig.json)
-            }
-            console.warn(`needAssign --> ${needAssign}, cconfig --> ${JSON.stringify(cconfig.json)}`)
-        }
-
-        console.log('Loading --> Config value -->:', JSON.stringify(Config));
-
         if (fialReason) {
             console.log('asset load catch:' + fialReason);
             this.$('_tipsLabel', Label).string = '资源加载失败';
             this.$('_btFix').active = true;
             return;
         }
-        await TableManager.instance.init()
         this.$('_ProgressBar', ProgressBar).progress = 1;
         this.$('_tipsLabel', Label).string = '正在登陆...';
         await LoginHander.instance.autoLogin();

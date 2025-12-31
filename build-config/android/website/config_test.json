@@ -1,0 +1,10 @@
+{
+    "description": "官网外网测试环境配置",
+    "env": "test",
+    "debug": "true",
+    "platform": "android",
+    "channel": "xiaomi",
+    "serverUrl": "https://test.api.xxx.com",
+    "public_http_address": "https://test.api.xxx.com",
+    "hotupdateUrl": "https://test.cdn.xxx.com/xiaomi"
+}

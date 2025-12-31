@@ -1,8 +1,0 @@
-{
-    "description": "官方web外网生产环境配置",
-    "debug": false,
-    "platform": "web",
-    "channel": "web",
-    "server_http_address": "https://app.taishunmj.web.com",
-    "public_http_address": "https://app.taishunmj.web.com"
-}
