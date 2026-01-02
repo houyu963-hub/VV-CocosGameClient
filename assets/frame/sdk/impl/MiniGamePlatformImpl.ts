@@ -1,4 +1,4 @@
-import { IPlatformApi, OrderInfo, PlatformFeature, PlatformResponse, ShareInfo } from "../PlatformApi";
+import { IPlatformApi, LoginInfo, OrderInfo, PlatformFeature, PlatformResponse, ShareInfo } from "../PlatformApi";
 
 export class MiniGamePlatformImpl implements IPlatformApi {
     private static readonly PLATFORM_NAME = 'WechatMiniGamePlatform';
@@ -6,7 +6,7 @@ export class MiniGamePlatformImpl implements IPlatformApi {
     isFeatureSupported(feature: PlatformFeature): boolean {
         return; // throw new Error("Method not implemented.");
     }
-    login(): Promise<PlatformResponse<{ token: string; userId: string; }>> {
+    login(loginInfo: LoginInfo): Promise<PlatformResponse<{ token: string; userId: string; }>> {
         return; // throw new Error("Method not implemented.");
     }
     pay(orderInfo: OrderInfo): Promise<PlatformResponse<{ transactionId?: string; }>> {

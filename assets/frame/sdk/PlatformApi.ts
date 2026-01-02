@@ -1,7 +1,7 @@
 // 平台接口
 export interface IPlatformApi {
     isFeatureSupported(feature: PlatformFeature): boolean;                                                  // 检测功能支持
-    login(): Promise<PlatformResponse<{ token: string; userId: string }>>;                                  // 登录
+    login(loginInfo: LoginInfo): Promise<PlatformResponse<{ token: string; userId: string }>>;                                  // 登录
     pay(orderInfo: OrderInfo): Promise<PlatformResponse<{ transactionId?: string }>>;                       // 支付
     share(shareInfo: ShareInfo): Promise<PlatformResponse>;                                                 // 分享
     exitApp(): void;                                                                                        // 退出 (原生平台可能需要)
@@ -41,8 +41,15 @@ export interface PlatformResponse<T = any> {
     data?: T;
 }
 
+// 登录信息
+export interface LoginInfo {
+    platform: 'alipay' | 'wechat';
+    extra?: string; // 平台特定参数 (JSON字符串)
+}
+
 // 订单信息 (支付用)
 export interface OrderInfo {
+    platform: 'alipay' | 'wechat';
     orderId: string;
     amount: number; // 单位: 分
     productName: string;
@@ -51,6 +58,7 @@ export interface OrderInfo {
 
 // 分享信息
 export interface ShareInfo {
+    platform: 'wechat';
     title: string;
     desc?: string;
     imageUrl?: string;

@@ -1,5 +1,5 @@
 import { native, sys } from "cc";
-import { IPlatformApi, MessageInfo, OrderInfo, Orientation, PlatformFeature, PlatformResponse, ShareInfo } from "../PlatformApi";
+import { IPlatformApi, LoginInfo, MessageInfo, OrderInfo, Orientation, PlatformFeature, PlatformResponse, ShareInfo } from "../PlatformApi";
 
 export class NativePlatformImpl implements IPlatformApi {
     private static readonly PLATFORM_NAME = 'NativePlatform';
@@ -20,7 +20,7 @@ export class NativePlatformImpl implements IPlatformApi {
     isFeatureSupported(feature: PlatformFeature): boolean {
         return true; // 所有功能都支持
     }
-    login(): Promise<PlatformResponse<{ token: string; userId: string; }>> {
+    login(loginInfo: LoginInfo): Promise<PlatformResponse<{ token: string; userId: string; }>> {
         return this.callNativeMethod('login', null);
     }
     pay(orderInfo: OrderInfo): Promise<PlatformResponse<{ transactionId?: string; }>> {

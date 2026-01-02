@@ -1,5 +1,5 @@
 import { _decorator } from "cc";
-import { Bundle_name, Scene_name } from "../../frame/config/Define";
+import { Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
 import { SceneBase } from "../../frame/ui/SceneBase";
 import SceneNavigator from "../../frame/ui/SceneNavigator";
@@ -14,7 +14,7 @@ export default class Hall extends SceneBase {
         Hall.instance = this;
         vv.memmory.clearRoomData();
         SceneNavigator.setHome(Scene_name.Hall);
-        vv.audio.playMusic("resources/audio/datingbeij", Bundle_name.Hall)
+        // vv.audio.playMusic("resources/audio/datingbeij", Bundle_name.Hall)
     }
 
     protected onDestroy(): void {

@@ -1,13 +1,7 @@
 import vv from "../../frame/Core";
 
 export default class LoginHander {
-
     private loginIds: number[] = [];
-    private login_platform: number = 0
-    private last_login_platform: number = -1
-    public static readonly KeyLastLoginPlatform = "KeyLastLoginPlatform"
-    public static readonly KeyTicket = "KeyTicket"
-    public static readonly KeyCustomAccount = "KeyCustomAccount"
 
     constructor() {
         vv.event.on(vv.eventType.gameShow, this.autoLogin, this);

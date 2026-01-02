@@ -1,17 +1,5 @@
 {
   "__version__": "1.3.7",
-  "splash-setting": {
-    "logo": {
-      "type": "custom",
-      "image": "project://settings/icon_taishunmajiang.png"
-    },
-    "background": {
-      "image": "project://settings/20250919-112530.png",
-      "type": "custom"
-    },
-    "displayRatio": 1,
-    "totalTime": 1500
-  },
   "bundleConfig": {
     "custom": {
       "default": {

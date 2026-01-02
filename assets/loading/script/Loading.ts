@@ -3,7 +3,7 @@ const jsb = (<any>window).jsb;
 import { Asset, Button, Label, ProgressBar, _decorator } from "cc";
 import { Bundle_name, Scene_name } from "../../frame/config/Define";
 import vv from "../../frame/Core";
-import Thirdparty, { NativeEventId } from "../../frame/system/Thirdparty";
+import { PlatformSdkManager } from "../../frame/sdk/PlatformSdkManager";
 import { SceneBase } from "../../frame/ui/SceneBase";
 import SceneNavigator from "../../frame/ui/SceneNavigator";
 import root from "../../resources/pbjs.js";
@@ -17,9 +17,7 @@ export default class Loading extends SceneBase {
     private hotUpdate: HotUpdate = null;
 
     protected onLoad(): void {
-        this.scheduleOnce(() => {
-            Thirdparty.callThirdparty(NativeEventId.CloseSplash);
-        }, 0.05)
+        this.scheduleOnce(() => { PlatformSdkManager.getInstance().getPlatform().closeSplash() }, 0.05)
         // 热更新通知
         vv.event.on(vv.eventType.already_up_to_date, this.already_up_to_date, this);
         vv.event.on(vv.eventType.new_version_found, this.new_version_found, this);
@@ -83,20 +81,21 @@ export default class Loading extends SceneBase {
         await Promise.all(arr).catch((error) => {
             fialReason = error;
         })
-        this.initGlobalVariable();
         if (fialReason) {
             console.log('asset load catch:' + fialReason);
             this.$('_tipsLabel', Label).string = '资源加载失败';
             this.$('_btFix').active = true;
             return;
         }
+        this.asssetLoaded();
         this.$('_ProgressBar', ProgressBar).progress = 1;
         this.$('_tipsLabel', Label).string = '正在登陆...';
         await LoginHander.instance.autoLogin();
     }
 
-    // 初始化全局变量
-    private initGlobalVariable(): void {
+    // 资源加载完成
+    private asssetLoaded(): void {
+        // 可以做一些变量的初始化操作
         vv.pb = root;
     }
 

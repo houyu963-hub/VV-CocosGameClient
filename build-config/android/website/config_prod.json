@@ -3,8 +3,8 @@
     "env": "prod",
     "debug": "false",
     "platform": "android",
-    "channel": "xiaomi",
+    "channel": "website",
     "serverUrl": "https://prod.api.xxx.com",
     "public_http_address": "https://prod.api.xxx.com",
-    "hotupdateUrl": "https://prod.cdn.xxx.com/xiaomi"
+    "hotupdateUrl": "https://prod.cdn.xxx.com/website"
 }

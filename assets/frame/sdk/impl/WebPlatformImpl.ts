@@ -1,5 +1,5 @@
 import vv from "../../Core";
-import { IPlatformApi, OrderInfo, PlatformFeature, PlatformResponse, ShareInfo } from "../PlatformApi";
+import { IPlatformApi, LoginInfo, OrderInfo, PlatformFeature, PlatformResponse, ShareInfo } from "../PlatformApi";
 
 export class WebPlatformImpl implements IPlatformApi {
     private static readonly PLATFORM_NAME = 'WebPlatform';
@@ -8,7 +8,7 @@ export class WebPlatformImpl implements IPlatformApi {
         // throw new Error("Method not implemented.");
         return;
     }
-    login(): Promise<PlatformResponse<{ token: string; userId: string; }>> {
+    login(loginInfo: LoginInfo): Promise<PlatformResponse<{ token: string; userId: string; }>> {
         // throw new Error("Method not implemented.");
         return;
     }

@@ -1,7 +1,7 @@
 // 货币符号
 export const CurrencySymbol = '￥';
 
-// 登录品泰
+// 登录平台
 export const LoginPlatform = {
     Dev: 0,
     WechatApp: 1,
