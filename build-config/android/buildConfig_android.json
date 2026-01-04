@@ -63,7 +63,7 @@
         "landscapeRight": true,
         "landscapeLeft": true
       },
-      "apiLevel": 34,
+      "apiLevel": 33,
       "appABIs": [
         "arm64-v8a"
       ],
