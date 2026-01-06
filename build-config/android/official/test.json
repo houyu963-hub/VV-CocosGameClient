@@ -1,7 +1,7 @@
 {
     "description": "官网外网测试环境配置",
     "env": "test",
-    "debug": "true",
+    "debug": true,
     "platform": "android",
     "channel": "website",
     "serverUrl": "https://test.api.xxx.com",

@@ -1,7 +1,7 @@
 {
     "description": "华为外网生产环境配置",
     "env": "prod",
-    "debug": "false",
+    "debug": false,
     "platform": "android",
     "channel": "xiaomi",
     "serverUrl": "https://prod.api.xxx.com",

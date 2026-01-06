@@ -1,7 +1,7 @@
 {
     "description": "华为外网测试环境配置",
     "env": "test",
-    "debug": "true",
+    "debug": true,
     "platform": "android",
     "channel": "huawei",
     "serverUrl": "https://test.api.xxx.com",

@@ -1,7 +1,7 @@
 {
     "description": "h5外网测试环境配置",
     "env": "test",
-    "debug": "true",
+    "debug": true,
     "platform": "web",
     "channel": "h5",
     "serverUrl": "https://test.api.xxx.com",

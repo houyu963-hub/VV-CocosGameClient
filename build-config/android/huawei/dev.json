@@ -1,7 +1,7 @@
 {
     "description": "华为内网开发环境配置",
     "env": "dev",
-    "debug": "true",
+    "debug": true,
     "platform": "android",
     "channel": "huawei",
     "serverUrl": "https://dev.api.xxx.com",

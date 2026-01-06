@@ -1,7 +1,7 @@
 {
     "description": "h5内网开发环境配置",
     "env": "dev",
-    "debug": "true",
+    "debug": true,
     "platform": "web",
     "channel": "h5",
     "serverUrl": "https://dev.api.xxx.com",

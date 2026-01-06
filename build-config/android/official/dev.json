@@ -1,7 +1,7 @@
 {
     "description": "官网内网开发环境配置",
     "env": "dev",
-    "debug": "true",
+    "debug": true,
     "platform": "android",
     "channel": "website",
     "serverUrl": "https://dev.api.xxx.com",

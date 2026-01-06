@@ -1,7 +1,7 @@
 {
     "description": "h5外网生产环境配置",
     "env": "prod",
-    "debug": "false",
+    "debug": false,
     "platform": "web",
     "channel": "h5",
     "serverUrl": "https://prod.api.xxx.com",

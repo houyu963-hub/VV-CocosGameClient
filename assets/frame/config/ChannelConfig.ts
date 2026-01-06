@@ -2,7 +2,7 @@
 export const ChannelConfig = {
   description: "华为内网开发环境配置",
   env: "dev",
-  debug: "true",
+  debug: true,
   platform: "android",
   channel: "xiaomi",
   serverUrl: "https://dev.api.xxx.com",
