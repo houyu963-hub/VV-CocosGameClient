@@ -4,7 +4,8 @@ export const ChannelConfig = {
   env: "dev",
   debug: true,
   platform: "android",
-  channel: "xiaomi",
+  channel: "huawei",
   serverUrl: "https://dev.api.xxx.com",
   public_http_address: "https://dev.api.xxx.com",
+  hotupdateUrl: "https://dev.cdn.xxx.com/huawei/hotupdate"
 };
