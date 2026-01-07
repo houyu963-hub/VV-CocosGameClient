@@ -1,11 +1,11 @@
-// ⚠️ AUTO GENERATED — DO NOT EDIT
+// ⚠️ 发布渠道包时会根据渠道配置自动修改此文件
 export const ChannelConfig = {
-  description: "华为内网开发环境配置",
+  description: "h5内网开发环境配置",
   env: "dev",
   debug: true,
-  platform: "android",
-  channel: "huawei",
+  platform: "web",
+  channel: "h5",
   serverUrl: "https://dev.api.xxx.com",
   public_http_address: "https://dev.api.xxx.com",
-  hotupdateUrl: "https://dev.cdn.xxx.com/huawei/hotupdate"
+  hotupdateUrl: ""
 };

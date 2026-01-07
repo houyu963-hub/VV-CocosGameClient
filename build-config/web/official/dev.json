@@ -5,5 +5,6 @@
     "platform": "web",
     "channel": "h5",
     "serverUrl": "https://dev.api.xxx.com",
-    "public_http_address": "https://dev.api.xxx.com"
+    "public_http_address": "https://dev.api.xxx.com",
+    "hotupdateUrl": ""
 }
