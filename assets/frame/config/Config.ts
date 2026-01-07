@@ -1,4 +1,4 @@
-// 游戏参数配置
+// 全局参数配置
 export const Config = {
     hash: '',
     design_width: 1624,
