@@ -1,5 +1,5 @@
-import { Config } from "db://assets/frame/config/Config";
 import vv from "../Core";
+import { ChannelConfig } from "../config/ChannelConfig";
 
 export interface Response {
     code: number,
@@ -38,9 +38,24 @@ export default class Http {
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        let response = xhr.responseText;
                         try {
-                            vv.logger.logRecieve('response url:' + route);
+                            let response: string;
+                            // 根据 responseType 选择正确的响应数据
+                            if (xhr.responseType === 'text' || xhr.responseType === '') {
+                                response = xhr.responseText;
+                            } else {
+                                // 如果 responseType 不是 text，则尝试从 response 转换
+                                if (typeof xhr.response === 'string') {
+                                    response = xhr.response;
+                                } else if (xhr.response instanceof ArrayBuffer) {
+                                    // 如果是 ArrayBuffer，转换为字符串
+                                    const decoder = new TextDecoder();
+                                    response = decoder.decode(xhr.response);
+                                } else {
+                                    response = JSON.stringify(xhr.response);
+                                }
+                            }
+                            vv.logger.logRecieve('response url:' + url);
                             vv.logger.log('data:' + response);
                             resolve(response);
                             xhr = null;
@@ -58,7 +73,7 @@ export default class Http {
                 }
             }
             xhr.timeout = 6000;
-            let route = Config.serverUrl + url;
+            let route = ChannelConfig.serverUrl + url;
             xhr.open(type, route, true);
             vv.logger.logSend('request url:' + route);
             vv.logger.log('param:' + (typeof (params) === 'object' ? JSON.stringify(params) : params));
