@@ -1,8 +1,16 @@
-[submodule "tools"]
-	path = tools
-	url = https://github.com/houyu963-hub/VV-CocosTools.git
-	branch = main
 [submodule "native"]
 	path = native
 	url = https://github.com/houyu963-hub/VV-CocosAndriodNativeCode.git
 	branch = main
+
+[submodule "tools"]
+	path = tools
+	url = https://github.com/houyu963-hub/VV-CocosTools.git
+	branch = main
+	skip = true
+	
+[submodule "jenkins-shared-cocos"]
+	path = jenkins-shared-cocos
+	url = https://github.com/houyu963-hub/VV-JenkinsSharedCocos.git
+	branch = main
+	skip = true
