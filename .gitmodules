@@ -13,4 +13,4 @@
 	path = jenkins-shared-cocos
 	url = https://github.com/houyu963-hub/VV-JenkinsSharedCocos.git
 	branch = main
-	skip = true
+	ignore = all
