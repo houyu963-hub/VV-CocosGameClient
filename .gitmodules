@@ -6,7 +6,3 @@
 	path = native
 	url = https://github.com/houyu963-hub/VV-CocosAndriodNativeCode.git
 	branch = main
-[submodule "jenkins-shared-cocos"]
-	path = jenkins-shared-cocos
-	url = https://github.com/houyu963-hub/VV-JenkinsSharedCocos.git
-	branch = main
