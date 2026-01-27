@@ -1,5 +1,5 @@
 import { sys } from "cc";
-import { Config } from "db://assets/frame/config/Config";
+import { ChannelConfig } from "../config/ChannelConfig";
 
 export default class Logger {
     public log(args: any, color?: string): void {
@@ -35,7 +35,7 @@ export default class Logger {
     }
 
     private print(level: string, args: any, color?: string): void {
-        if (!Config.debug) return;
+        if (!ChannelConfig.debug) return;
         if (sys.isNative) {
             if (typeof (args) === 'object') {
                 console.log(JSON.stringify(args));

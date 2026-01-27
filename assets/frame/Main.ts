@@ -1,10 +1,10 @@
 import { Game, JsonAsset, assetManager, game, sys, view } from "cc";
 import { EDITOR } from "cc/env";
 import { Config } from "db://assets/frame/config/Config";
+import CommonListener from "../common/script/CommonListener";
 import vv from "./Core";
-import ThirdpartyListener from "./listener/ThirdpartyListener";
 import { PlatformSdkManager } from "./sdk/PlatformSdkManager";
-import Thirdparty from "./system/Thirdparty";
+import Browser from "./system/Browser";
 
 class Main {
     constructor() {
@@ -13,13 +13,13 @@ class Main {
         let volume_mute = sys.localStorage.getItem('volume_mute');
         vv.audio.setMusicVolume(music_mute === 'true' ? 0 : 1);
         vv.audio.setEffectVolume(volume_mute === 'true' ? 0 : 1);
-        // 启动服务
-        vv.services.add(ThirdpartyListener);
+        // 启动公共监听服务
+        vv.services.add(CommonListener);
         vv.services.init();
         // 初始化第三方sdk
         PlatformSdkManager.getInstance().initialize();
-        // 初始化浏览器参数 仅限于web
-        Thirdparty.initBrowserParam();
+        // 初始化浏览器参数
+        Browser.initialize();
         // 设置帧率
         game.frameRate = 120;
         // 切换前后台监听

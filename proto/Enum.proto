@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package Enum;
+
+// 平台类型
+enum EPlatformType {
+    PLATFORM_NONE       = 0;        // 开发账号
+    PLATFORM_WEIXIN     = 1;        // 微信
+    PLATFORM_WEIXIN_MINI = 2;        // 微信小程序
+    PLATFORM_WEIXIN_SERVICE = 3;     // 微信服务号
+    PLATFORM_QUICK      = 4;        // QUICK平台
+    PLATFORM_APPLE      = 5;        // AppleID平台
+}

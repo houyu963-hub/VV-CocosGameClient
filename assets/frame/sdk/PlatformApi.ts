@@ -1,7 +1,7 @@
 // 平台接口
 export interface IPlatformApi {
     isFeatureSupported(feature: PlatformFeature): boolean;                                                  // 检测功能支持
-    login(loginInfo: LoginInfo): Promise<PlatformResponse<{ token: string; userId: string }>>;                                  // 登录
+    login(loginInfo: LoginInfo): Promise<PlatformResponse<{ token: string; userId: string }>>;              // 登录
     pay(orderInfo: OrderInfo): Promise<PlatformResponse<{ transactionId?: string }>>;                       // 支付
     share(shareInfo: ShareInfo): Promise<PlatformResponse>;                                                 // 分享
     exitApp(): void;                                                                                        // 退出 (原生平台可能需要)

@@ -1,8 +1,8 @@
 import { _decorator, find, instantiate, Prefab, Widget } from 'cc';
-import Thirdparty, { NativeEventId } from 'db://assets/frame/system/Thirdparty';
 import vv from '../Core';
 import ClickEffect from '../component/ClickEffect';
 import { Bundle_name, Scene_name } from '../config/Define';
+import { PlatformSdkManager } from '../sdk/PlatformSdkManager';
 import BaseClass from './BaseClass';
 import { PopupName } from './PopupConfig';
 import SceneNavigator from './SceneNavigator';
@@ -107,7 +107,7 @@ export class SceneBase extends BaseClass {
                 vv.utils.showDialog({
                     content: '是否退出游戏?',
                     confirmCb: () => {
-                        Thirdparty.callThirdparty(NativeEventId.ExitApp);
+                        PlatformSdkManager.getInstance().getPlatform().exitApp();
                     },
                     btnStyle: 3,
                 })

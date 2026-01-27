@@ -28,6 +28,7 @@ export class PlatformSdkManager {
             case Platform.Mini: // 小游戏环境
                 this.initMiniGame();
                 break;
+            // case ...
             default:
                 break;
         }

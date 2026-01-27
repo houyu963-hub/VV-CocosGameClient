@@ -3,7 +3,7 @@ import { Marquee } from "../../resources/pbjs";
 import { CommonDefine } from "./CommonDefine";
 
 /**
- * 登录成功服务器主动推送
+ * 公共监听器
  */
 export default class CommonListener {
     // 系统相关
