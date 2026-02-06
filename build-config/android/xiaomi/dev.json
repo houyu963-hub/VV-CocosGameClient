@@ -1,5 +1,5 @@
 {
-    "description": "华为内网开发环境配置",
+    "description": "小米内网开发环境配置",
     "env": "dev",
     "debug": true,
     "platform": "android",

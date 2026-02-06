@@ -1,5 +1,5 @@
 {
-    "description": "华为外网生产环境配置",
+    "description": "小米外网生产环境配置",
     "env": "prod",
     "debug": false,
     "platform": "android",

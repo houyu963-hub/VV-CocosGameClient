@@ -1,5 +1,5 @@
 {
-    "description": "华为外网测试环境配置",
+    "description": "小米外网测试环境配置",
     "env": "test",
     "debug": true,
     "platform": "android",
