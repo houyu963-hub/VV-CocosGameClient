@@ -1,9 +1,9 @@
 const jsb = (<any>window).jsb;
 
-import { Asset, AssetManager, Constructor, ImageAsset, Prefab, SpriteFrame, Texture2D, assetManager, isValid, resources } from "cc";
-import { Bundle_name } from 'db://assets/frame/config/Define';
+import { Asset, AssetManager, Constructor, ImageAsset, Node, Prefab, Sprite, SpriteFrame, Texture2D, assetManager, isValid, resources } from "cc";
 import vv from "../Core";
 import { Config } from "../config/Config";
+import { Bundle_name } from "../config/Define";
 
 /**
  * 资源加载
@@ -147,27 +147,82 @@ export default class AssetBundle {
     }
 
     /**
-     * 加载远程资源
+     * 加载远程图片
      * @param path 路径
+     * @param callback 回调
+     * @param spriteNode 节点 如果有节点则设置节点的SpriteFrame并适配宽高
+     * @param ext 扩展名 默认 { ext: '.png' }
      * @returns 
      */
-    public async loadRemoteRes(path: string, callback?: (spriteFrame: SpriteFrame) => void): Promise<SpriteFrame> {
+    public async loadRemoteRes(path: string, callback?: (spriteFrame: SpriteFrame) => void, spriteNode?: Node, ext = { ext: '.png' }): Promise<SpriteFrame> {
+        // 添加加载缓存，避免重复加载同一张图片
+        if (this.cached_res.has(path)) {
+            const cachedFrame = this.cached_res.get(path);
+            if (cachedFrame && isValid(cachedFrame)) {
+                this.applySpriteFrame(cachedFrame, spriteNode, callback);
+                return Promise.resolve(cachedFrame);
+            }
+        }
+
         return new Promise(resolve => {
-            assetManager.loadRemote<ImageAsset>(path, (err, data) => {
+            assetManager.loadRemote<ImageAsset>(path, ext, (err, data) => {
                 if (err) {
-                    vv.logger.error(err.message || err);
+                    vv.logger.error(`Load remote resource failed: ${path}`);
                     callback?.(null);
                     resolve(null);
                     return;
                 }
-                let texture = new Texture2D();
-                texture.image = data;
-                let spriteFrame = new SpriteFrame();
-                spriteFrame.texture = texture;
-                callback?.(spriteFrame);
-                resolve(spriteFrame);
-            })
-        })
+                try {
+                    // 数据验证
+                    if (!data || !data.isValid) {
+                        vv.logger.error(`Loaded remote resource is invalid: ${path}`);
+                        callback?.(null);
+                        resolve(null);
+                        return;
+                    }
+                    // 创建纹理和精灵帧
+                    let spriteFrame = new SpriteFrame();
+                    let texture = new Texture2D();
+                    texture.image = data;
+                    spriteFrame.texture = texture;
+
+                    // 缓存资源
+                    this.cached_res.set(path, spriteFrame);
+
+                    // 应用到节点
+                    this.applySpriteFrame(spriteFrame, spriteNode, callback);
+                    resolve(spriteFrame);
+                } catch (error) {
+                    vv.logger.warn(`apply remote resource failed: ${error}`);
+                }
+            });
+        });
+    }
+
+    private applySpriteFrame(spriteFrame: SpriteFrame, spriteNode?: Node, callback?: (spriteFrame: SpriteFrame) => void): void {
+        if (spriteNode && spriteNode.isValid && spriteNode.active) {
+            const spriteComponent = spriteNode.getComponent(Sprite);
+            if (spriteComponent) {
+                spriteComponent.spriteFrame = spriteFrame;
+
+                // TODO保持图片比例
+                // const uiTransform = spriteNode.getComponent(UITransform);
+                // if (uiTransform && spriteFrame) {
+                //     const designWidth = uiTransform.width;
+                //     const designHeight = uiTransform.height;
+                //     const realWidth = spriteFrame.width;
+                //     const realHeight = spriteFrame.height;
+
+                //     // 计算缩放比例，保持图片完整显示
+                //     const scaleX = designWidth / realWidth;
+                //     const scaleY = designHeight / realHeight;
+                //     const scale = Math.min(scaleX, scaleY); // 取较小的比例确保图片完整显示
+
+                //     spriteNode.scale = v3(scale, scale, 1);
+                // }
+            }
+        }
+        callback?.(spriteFrame);
     }
 
 }

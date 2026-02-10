@@ -1,5 +1,5 @@
 import { director } from "cc";
-import { Scene_name } from "../config/Define";
+import { Scene_name } from "db://assets/frame/config/Define";
 
 /**
  * 场景导航类
@@ -47,14 +47,13 @@ export default class SceneNavigator {
      * @param onLaunched 场景加载完成回调
      */
     public static goHome(param?: any, coverHistory?: boolean, onLaunched?: Function) {
-        this._param = null;
+        this._param = param;
         const name = this._home || Scene_name.Hall;
         if (this._curScene === name) {
             onLaunched?.();
             return;
         }
         this._curScene = null;
-        this._param = param || null;
         director.loadScene(name, () => {
             if (coverHistory) {
                 this._history.length = 0;
@@ -72,7 +71,7 @@ export default class SceneNavigator {
      * @param onLaunched 场景加载完成回调
      */
     public static go(name: string, param?: any, onLaunched?: Function) {
-        this._param = null;
+        this._param = param;
         if (this._curScene === name) {
             onLaunched?.();
             return;
@@ -80,7 +79,6 @@ export default class SceneNavigator {
         director.loadScene(name, () => {
             this._history.push(name);
             this._curScene = name;
-            this._param = param || null;
             onLaunched?.();
         })
     }
@@ -94,13 +92,12 @@ export default class SceneNavigator {
         if (this._history.length < 1) {
             return;
         }
-        this._param = null;
+        this._param = param;
         const history = this._history,
             name = history[history.length - 2];
         director.loadScene(name, () => {
             history.pop();
             this._curScene = name;
-            this._param = param || null;
             onLaunched?.();
         })
     }
