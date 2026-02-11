@@ -118,7 +118,8 @@ export default class AssetBundle {
             const callback = (error: Error, res: T) => {
                 if (error) {
                     if (onComplete) onComplete(error, res);
-                    reject(error);
+                    vv.logger.error(error);
+                    resolve(null);
                 } else {
                     if (res.isValid) {
                         // 缓存资源
@@ -128,7 +129,8 @@ export default class AssetBundle {
                         resolve(res);
                     } else {
                         onComplete?.(error, res);
-                        reject(error);
+                        vv.logger.error(error);
+                        resolve(null);
                     }
                 }
             }
@@ -137,7 +139,7 @@ export default class AssetBundle {
             } else {
                 // 检查bd是否加载
                 if (!assetManager.getBundle(bundleName)) {
-                    vv.logger.warn('bundle unloaded:' + bundleName);
+                    vv.logger.error('bundle unloaded:' + bundleName);
                     resolve(null);
                     return;
                 }
